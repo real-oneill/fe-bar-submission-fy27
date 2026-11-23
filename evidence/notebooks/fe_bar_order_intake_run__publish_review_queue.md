@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_order_intake_run / publish_review_queue (run 793007360415969, as executed, with outputs)
+# [dev <deployer>] fe_bar_order_intake_run / publish_review_queue (run 698607378377192, as executed, with outputs)
 
-Notebook `66a85941-b79d-45a6-9864-a8ced4c87f52`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `d05dcb68-1a66-4995-b2c1-fe5fc197c9eb`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 04 — Publish the review queue to the Review App
 Runs after `03_build_review_queue.py`, for either backend:
@@ -42,6 +42,7 @@ Downloading http://package-proxy.host.local:8184/pypi/v1/packages/scramp/1.5.0/s
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/asn1crypto/1.5.1/asn1crypto-1.5.1-py2.py3-none-any.whl (105 kB)
 Installing collected packages: asn1crypto, scramp, pg8000
 [?25l
+[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━━━━━━━━━━━ 2/3 [pg8000]
 [2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3/3 [pg8000]
 [?25h
 [1A[2KSuccessfully installed asn1crypto-1.5.1 pg8000-1.31.6 scramp-1.5.0

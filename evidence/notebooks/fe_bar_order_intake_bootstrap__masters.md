@@ -1,6 +1,6 @@
 # [dev <deployer>] fe_bar_order_intake_bootstrap / masters (run 942200234507859, as executed, with outputs)
 
-Notebook `f938e5e2-8186-435f-b4d2-60ae42e60a22`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `4c0740d8-b60f-47ae-83b3-b3f99330643c`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 01 — Master (tribal-knowledge) tables + SAP outbound target
 Creates the lookup tables the Gold layer joins against, as **empty typed templates**. With

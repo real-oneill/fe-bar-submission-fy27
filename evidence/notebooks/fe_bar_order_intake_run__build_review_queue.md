@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_order_intake_run / build_review_queue (run 650149657893077, as executed, with outputs)
+# [dev <deployer>] fe_bar_order_intake_run / build_review_queue (run 203254553454054, as executed, with outputs)
 
-Notebook `2b02f0ee-ce00-4907-83c8-748689dafa71`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `5a66c712-7cc0-4d1c-ae34-14424bd38101`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 03 — Build the Review-App queue table
 Materializes `review_orders` (order grain) from the Gold `purchase_orders` (line grain)
@@ -283,6 +283,6 @@ print("review_citations rows:", spark.table(f"{S}.review_citations").count())
 
 ```
 extraction_mode (Gold): hybrid -> citations on
-review_citations rows: 11589
+review_citations rows: 12018
 ```
 

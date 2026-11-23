@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_order_intake_run / export_attachments (run 735541244524944, as executed, with outputs)
+# [dev <deployer>] fe_bar_order_intake_run / export_attachments (run 617247143320553, as executed, with outputs)
 
-Notebook `e2e62a7c-f55f-4b8c-bf5e-6708e68e28ce`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `e1dcb2bc-fd08-4941-b4d6-1d7b64f58cb7`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 05 — Export Outlook attachments to the Volume (mail_source = outlook only)
 With the Outlook connector as the mail source, attachments exist only as bytes in Bronze

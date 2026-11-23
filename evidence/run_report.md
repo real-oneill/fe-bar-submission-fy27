@@ -1,4 +1,4 @@
-# FE Bar FY27: run report (collected 2026-11-23 18:08 UTC)
+# FE Bar FY27: run report (collected 2026-11-23 19:28 UTC)
 
 Live query results from `evan_aws_01_catalog.fe_bar_fy27` on `https://fevm-evan-aws-01.cloud.databricks.com` (SQL warehouse `4a29d0ae256f1d92`), produced by the accelerator's
 medallion pipeline, the review-queue jobs and `src/fe_bar/10_evaluate.py` on the 184 fictional Maison Solenne documents.
@@ -7,10 +7,10 @@ Every number below was read back from the tables when this file was generated; t
 ## Headline
 
 - **184 documents / 220 purchase orders / 2719 answer-key lines** processed end to end.
-- Line accuracy (right material AND quantity): **0.778**; PO number found: **0.941**; customer resolved to the right sold-to: **0.905**.
+- Line accuracy (right material AND quantity): **0.779**; PO number found: **0.941**; customer resolved to the right sold-to: **0.891**.
 - Orders routed to human review: **0.782**; orders NOT routed but wrong (false confidence): **0**.
-- Effort on these 184 documents: **62.6 h** keyed by hand vs **17.4 h** with the pipeline (review + re-keying misses): **0.723 of the effort saved**.
-- Annualised at the assumed volume (`roi_assumptions`): **8.1 FTE today -> 2.2 FTE with the pipeline = 5.9 FTE saved** (9832 hours, about $393294 labour a year).
+- Effort on these 184 documents: **62.6 h** keyed by hand vs **17.3 h** with the pipeline (review + re-keying misses): **0.724 of the effort saved**.
+- Annualised at the assumed volume (`roi_assumptions`): **8.1 FTE today -> 2.2 FTE with the pipeline = 5.9 FTE saved** (9849 hours, about $393946 labour a year).
 
 ## Table row counts (bronze -> silver -> gold -> queue)
 
@@ -19,7 +19,7 @@ Every number below was read back from the tables when this file was generated; t
 | email_attachments (bronze) | 184 |
 | parsed_attachments (silver) | 222 |
 | extracted_parsed (gold) | 222 |
-| purchase_orders (gold lines) | 2703 |
+| purchase_orders (gold lines) | 2705 |
 | review_orders (queue) | 217 |
 | gt_manifest (answer key docs) | 184 |
 | gt_lines (answer key lines) | 2719 |
@@ -28,21 +28,21 @@ Every number below was read back from the tables when this file was generated; t
 
 | documents | purchase_orders | answer_key_lines | po_found_rate | customer_correct_rate | line_accuracy | review_rate | false_confidence_pos | corpus_manual_hours | corpus_assisted_hours | time_saved_share | annual_hours_saved | fte_manual | fte_assisted | fte_saved | annual_usd_saved |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 184 | 220 | 2719 | 0.941 | 0.905 | 0.778 | 0.782 | 0 | 62.6 | 17.4 | 0.723 | 9832 | 8.1 | 2.2 | 5.9 | 393294 |
+| 184 | 220 | 2719 | 0.941 | 0.891 | 0.779 | 0.782 | 0 | 62.6 | 17.3 | 0.724 | 9849 | 8.1 | 2.2 | 5.9 | 393946 |
 
 ## By document type (channel)
 
 | channel | docs | lines | line_accuracy | customer_acc | review_rate | false_conf | fte_saved | annual_usd_saved |
 |---|---|---|---|---|---|---|---|---|
-| excel_buysheet | 16 | 623 | 0.829 | 1.0 | 0.88 | 0 | 1.47 | 98496 |
+| excel_buysheet | 16 | 623 | 0.829 | 1.0 | 0.88 | 0 | 1.47 | 99004 |
 | amended_scan | 16 | 388 | 0.887 | 1.0 | 0.938 | 0 | 1.02 | 68297 |
-| fax | 16 | 271 | 1.0 | 0.938 | 0.313 | 0 | 0.81 | 54547 |
+| fax | 16 | 271 | 1.0 | 0.938 | 0.375 | 0 | 0.80 | 53895 |
 | email_pdf | 16 | 293 | 1.0 | 1.0 | 0.313 | 0 | 0.57 | 38058 |
-| email_pricelist | 16 | 153 | 0.993 | 1.0 | 0.063 | 0 | 0.39 | 26420 |
-| erp_edi | 16 | 313 | 0.757 | 1.0 | 1.0 | 0 | 0.35 | 23739 |
+| email_pricelist | 16 | 153 | 1.0 | 1.0 | 0.0 | 0 | 0.40 | 27145 |
+| erp_edi | 16 | 313 | 0.761 | 1.0 | 1.0 | 0 | 0.35 | 23812 |
 | portal_export | 16 | 234 | 1.0 | 1.0 | 0.813 | 0 | 0.34 | 22899 |
-| handwritten | 16 | 126 | 0.0 | 0.875 | 1.0 | 0 | 0.34 | 22971 |
-| multimodal | 24 | 103 | 0.194 | 0.25 | 1.0 | 0 | 0.22 | 15033 |
+| handwritten | 16 | 126 | 0.0 | 0.625 | 1.0 | 0 | 0.34 | 22971 |
+| multimodal | 24 | 103 | 0.194 | 0.292 | 1.0 | 0 | 0.22 | 15033 |
 | email_body | 16 | 126 | 0.339 | 1.0 | 0.938 | 0 | 0.18 | 12199 |
 | phone | 16 | 89 | 0.0 | 1.0 | 1.0 | 0 | 0.16 | 10634 |
 
@@ -50,54 +50,54 @@ Every number below was read back from the tables when this file was generated; t
 
 | region | docs | pos | line_accuracy | review_rate | fte_saved | annual_usd_saved |
 |---|---|---|---|---|---|---|
-| North America | 53 | 55 | 0.899 | 0.527 | 1.47 | 98573 |
+| North America | 53 | 55 | 0.902 | 0.509 | 1.48 | 99370 |
 | UK & Ireland | 40 | 40 | 0.649 | 0.975 | 1.25 | 84275 |
-| Middle East | 36 | 70 | 0.731 | 0.9 | 1.67 | 112471 |
+| Middle East | 36 | 70 | 0.731 | 0.9 | 1.68 | 112978 |
 | DACH | 24 | 24 | 0.968 | 0.875 | 0.42 | 28428 |
 | Italy | 18 | 18 | 0.0 | 1.0 | 0.37 | 24783 |
-| France | 13 | 13 | 1.0 | 0.154 | 0.67 | 44765 |
+| France | 13 | 13 | 1.0 | 0.231 | 0.66 | 44112 |
 
 ## By complexity
 
 | complexity | docs | line_accuracy | review_rate | false_conf | fte_saved |
 |---|---|---|---|---|---|
-| 1 | 43 | 0.933 | 0.698 | 0 | 0.85 |
-| 2 | 43 | 0.769 | 0.622 | 0 | 0.99 |
-| 3 | 74 | 0.778 | 0.833 | 0 | 3.07 |
+| 1 | 43 | 0.904 | 0.698 | 0 | 0.84 |
+| 2 | 43 | 0.802 | 0.6 | 0 | 1.02 |
+| 3 | 74 | 0.778 | 0.843 | 0 | 3.07 |
 | 4 | 24 | 0.5 | 1.0 | 0 | 0.94 |
 
 ## By injected problem type
 
 | issue_type | docs | line_accuracy | review_rate |
 |---|---|---|---|
-| out_of_stock | 113 | 0.827 | 0.732 |
-| customer_name_variant | 69 | 0.76 | 0.771 |
-| unresolvable_sku | 52 | 0.82 | 0.961 |
-| price_mismatch | 47 | 0.881 | 0.787 |
-| xref_missing_but_resolvable | 42 | 0.83 | 0.923 |
-| uom_cases | 33 | 0.779 | 0.913 |
-| discontinued_sku_successor | 33 | 1.0 | 0.485 |
-| past_or_weekend_delivery_date | 23 | 0.84 | 0.865 |
+| out_of_stock | 113 | 0.832 | 0.732 |
+| customer_name_variant | 69 | 0.777 | 0.783 |
+| unresolvable_sku | 52 | 0.821 | 0.948 |
+| price_mismatch | 47 | 0.893 | 0.813 |
+| xref_missing_but_resolvable | 42 | 0.831 | 0.923 |
+| discontinued_sku_successor | 33 | 1.0 | 0.515 |
+| uom_cases | 33 | 0.792 | 0.913 |
+| past_or_weekend_delivery_date | 23 | 0.821 | 0.865 |
 | free_goods | 23 | 0.953 | 0.739 |
-| multi_po_document | 18 | 0.8 | 0.889 |
+| multi_po_document | 18 | 0.826 | 0.889 |
 | missing_po_number | 16 | 0.125 | 1.0 |
-| zero_qty_rows_trap | 16 | 0.993 | 0.063 |
+| zero_qty_rows_trap | 16 | 1.0 | 0.0 |
 | handwritten_amendment | 15 | 0.891 | 0.933 |
 | mixed_currency | 14 | 0.84 | 0.87 |
 | mid_call_correction | 13 | 0.0 | 1.0 |
 | size_omitted_default_rule | 12 | 0.0 | 1.0 |
 | promo_discount_pricing | 8 | 0.714 | 1.0 |
-| closed_dc_reroute | 7 | 0.737 | 1.0 |
 | photo_of_handwritten_list | 7 | 0.0 | 1.0 |
-| garbled_po_number | 6 | 0.575 | 0.667 |
+| closed_dc_reroute | 7 | 0.644 | 1.0 |
 | handwritten_customer_number | 6 | 0.667 | 1.0 |
 | identify_by_image_caption | 6 | 0.0 | 1.0 |
+| garbled_po_number | 6 | 0.575 | 0.667 |
 | duplicate_submission | 5 | 0.894 | 1.0 |
 | inline_images_only | 5 | 0.0 | 1.0 |
 | identify_by_photo | 5 | 0.0 | 1.0 |
 | amendment | 5 | 0.125 | 1.0 |
-| large_document | 4 | 0.9 | 0.875 |
 | handwritten_correction | 4 | 0.5 | 1.0 |
+| large_document | 4 | 0.9 | 0.875 |
 | unordered_offer_rows | 4 | 0.5 | 1.0 |
 | tester_free_goods | 4 | 0.5 | 1.0 |
 | circled_then_crossed_out | 3 | 0.0 | 1.0 |
@@ -110,7 +110,7 @@ Every number below was read back from the tables when this file was generated; t
 
 | line_class | lines | material_found | material_and_qty_correct | flagged |
 |---|---|---|---|---|
-| orderable | 2605 | 0.778 | 0.778 | 0.302 |
+| orderable | 2605 | 0.779 | 0.779 | 0.296 |
 | unresolvable | 97 | 0.0 | 0.0 |  |
 | cancel_line | 17 | 0.471 | 0.471 | 0.0 |
 
@@ -136,22 +136,22 @@ Every number below was read back from the tables when this file was generated; t
 
 | order_id | orig_format | po_number | customer_name | resolved_sap_sold_to | region | n_lines | overall_confidence | status | review_reasons |
 |---|---|---|---|---|---|---|---|---|---|
-| DOC-00155#order-1 | pdf |  |  | 400800 | UK & Ireland | 3 | 0.0 | pending | No customer PO number found in the document; No customer identified; 3 line(s) not verified against the source row; Extracted 3 lines but form has 0 filled quan |
+| DOC-00155#order-1 | pdf |  |  | 200600 | DACH | 3 | 0.0 | pending | No customer PO number found in the document; No customer identified; 3 line(s) not verified against the source row; Extracted 3 lines but form has 0 filled quan |
 | DOC-00156#order-1 | pdf |  |  | 300500 | Middle East | 3 | 0.138 | pending | No customer PO number found in the document; No customer identified; 2 line(s) not verified against the source row; Extracted 3 lines but form has 0 filled quan |
-| DOC-00157#order-1 | pdf |  | Parfümerie Lindqvist | 200652 | DACH | 3 | 0.158 | pending | No customer PO number found in the document; 3 line(s) not verified against the source row; Extracted 3 lines but form has 0 filled quantity rows; 1 SKU(s) not  |
-| DOC-00158#C3698 | pdf | C3698 |  | 300700 | Middle East | 3 | 0.166 | pending | No customer identified; 3 line(s) not verified against the source row; Extracted 3 lines but form has 0 filled quantity rows; 1 SKU(s) not in material master |
+| DOC-00157#order-1 | pdf |  | Parfümerie Lindqvist | 200652 | DACH | 4 | 0.158 | pending | No customer PO number found in the document; 4 line(s) not verified against the source row; Extracted 4 lines but form has 0 filled quantity rows; 1 SKU(s) not  |
+| DOC-00158#C3698 | pdf | C3698 |  | 200652 | DACH | 4 | 0.166 | pending | No customer identified; 4 line(s) not verified against the source row; Extracted 4 lines but form has 0 filled quantity rows; 1 SKU(s) not in material master |
 | doc-1bab4c5eed01#order-1 | pdf |  |  | 200300 | France | 2 | 0.183 | pending | No customer PO number found in the document; No customer identified; 2 line(s) not verified against the source row; 2 SKU(s) not in material master |
 | doc-91168e6f5025#order-1 | pdf |  |  | 200400 | Italy | 2 | 0.189 | pending | No customer PO number found in the document; No customer identified; 2 line(s) not verified against the source row; 2 SKU(s) not in material master |
+| DOC-00058#696---2-6-1 | pdf | 696 / 2 6 | Negozio Torino Centro | 300700 | Middle East | 5 | 0.276 | pending | Customer PO number looks like a title or heading: 696 / 2 6; Customer not in customer master; 5 line(s) not verified against the source row; Extracted 5 lines b |
 | DOC-00046#order-1 | pdf |  | CORSO PROFUMERIE | 200400 | Italy | 4 | 0.305 | pending | No customer PO number found in the document; 4 line(s) not verified against the source row; Extracted 4 lines but form has 3 filled quantity rows; 4 SKU(s) not  |
-| DOC-00058#696---2-6-1 | pdf | 696 / 2 6 | Corso Profumerie | 200400 | Italy | 5 | 0.317 | pending | Customer PO number looks like a title or heading: 696 / 2 6; 5 line(s) not verified against the source row; Extracted 5 lines but form has 4 filled quantity row |
 | DOC-00166#order-1 | pdf |  | Corso Centro | 200400 | Italy | 4 | 0.318 | pending | No customer PO number found in the document; Customer not in customer master; 4 line(s) not verified against the source row; 4 SKU(s) not in material master |
 | DOC-00167#order-1 | pdf |  | KSS Manchester | 200653 | DACH | 5 | 0.32 | pending | No customer PO number found in the document; Customer not in customer master; 5 line(s) not verified against the source row; 5 SKU(s) not in material master |
 | DOC-00165#order-1 | pdf |  | KSS Park | 400800 | UK & Ireland | 4 | 0.325 | pending | No customer PO number found in the document; Customer not in customer master; 4 line(s) not verified against the source row; 4 SKU(s) not in material master |
 | DOC-00168#order-1 | pdf |  | KSS Manchester | 200653 | DACH | 5 | 0.325 | pending | No customer PO number found in the document; Customer not in customer master; 5 line(s) not verified against the source row; 5 SKU(s) not in material master |
-| DOC-00162#HV-644280 | pdf | HV-644280 |  | 200600 | DACH | 6 | 0.333 | pending | No customer identified; 6 line(s) not verified against the source row; 6 SKU(s) not in material master |
+| DOC-00162#HV-644280 | pdf | HV-644280 |  | 400800 | UK & Ireland | 7 | 0.333 | pending | No customer identified; 7 line(s) not verified against the source row; 7 SKU(s) not in material master |
+| DOC-00164#HV-387284 | pdf | HV-387284 |  | 200654 | DACH | 6 | 0.339 | pending | No customer identified; 6 line(s) not verified against the source row; 6 SKU(s) not in material master |
 | DOC-00160#HV-456261 | pdf | HV-456261 |  | 300500 | Middle East | 3 | 0.35 | pending | No customer identified; 3 line(s) not verified against the source row; 3 SKU(s) not in material master |
 | DOC-00043#order-1 | pdf |  | CORSO PROFUMERIE | 200400 | Italy | 3 | 0.351 | pending | No customer PO number found in the document; 3 line(s) not verified against the source row; 3 SKU(s) not in material master |
-| DOC-00161#HV-811362 | pdf | HV-811362 |  | 100200 | North America | 4 | 0.352 | pending | No customer identified; 4 line(s) not verified against the source row; 4 SKU(s) not in material master |
 | DOC-00103#order-1 | email/text |  | KSS | 400800 | UK & Ireland | 7 | 0.375 | pending | No customer PO number found in the document; 7 line(s) not verified against the source row; 7 SKU(s) not in material master |
 | DOC-00104#order-1 | email/text |  | Kensington Salon Supply | 400800 | UK & Ireland | 5 | 0.375 | pending | No customer PO number found in the document; 5 line(s) not verified against the source row; 5 SKU(s) not in material master |
 | DOC-00105#KSS7231-1 | email/text | KSS7231 | Kensington Salon Supply | 400800 | UK & Ireland | 8 | 0.375 | pending | Customer PO number not found in the document: KSS7231; 8 line(s) not verified against the source row; 8 SKU(s) not in material master |
@@ -166,21 +166,21 @@ Every number below was read back from the tables when this file was generated; t
 
 | order_id | orig_format | po_number | customer_name | resolved_sap_sold_to | region | n_lines | overall_confidence | status | review_reasons |
 |---|---|---|---|---|---|---|---|---|---|
+| DOC-00060#MTR-CDG-26-5916 | spreadsheet | MTR-CDG-26-5916 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 9 | 1.0 | pending | 1 SKU(s) not in material master |
+| DOC-00060#MTR-SIN-26-2232 | spreadsheet | MTR-SIN-26-2232 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 14 | 1.0 | pending | 3 SKU(s) not in material master |
 | DOC-00061#MTR-CDG-26-2490 | spreadsheet | MTR-CDG-26-2490 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 4 | 1.0 | pending | 1 SKU(s) not in material master |
 | DOC-00061#MTR-DXB-26-4943 | spreadsheet | MTR-DXB-26-4943 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 11 | 1.0 | pending | 2 SKU(s) not in material master |
 | DOC-00061#MTR-JFK-26-7492 | spreadsheet | MTR-JFK-26-7492 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 5 | 1.0 | pending |  |
 | DOC-00061#MTR-LHR-26-6748 | spreadsheet | MTR-LHR-26-6748 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 9 | 1.0 | pending | 1 SKU(s) not in material master |
-| DOC-00062#MTR-DXB-26-9176 | spreadsheet | MTR-DXB-26-9176 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 4 | 1.0 | pending | 1 SKU(s) not in material master |
-| DOC-00062#MTR-JFK-26-1318 | spreadsheet | MTR-JFK-26-1318 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 16 | 1.0 | pending | 4 SKU(s) not in material master |
+| DOC-00063#MTR-CDG-26-7032 | spreadsheet | MTR-CDG-26-7032 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 4 | 1.0 | pending |  |
+| DOC-00063#MTR-DXB-26-9531 | spreadsheet | MTR-DXB-26-9531 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 9 | 1.0 | pending | 4 SKU(s) not in material master |
+| DOC-00063#MTR-JFK-26-4461 | spreadsheet | MTR-JFK-26-4461 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 15 | 1.0 | pending | 3 SKU(s) not in material master |
 | DOC-00064#MTR-CDG-26-4779 | spreadsheet | MTR-CDG-26-4779 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 16 | 1.0 | pending |  |
 | DOC-00064#MTR-DXB-26-7119 | spreadsheet | MTR-DXB-26-7119 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 12 | 1.0 | pending | 2 SKU(s) not in material master |
 | DOC-00064#MTR-JFK-26-1304 | spreadsheet | MTR-JFK-26-1304 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 14 | 1.0 | pending | 3 SKU(s) not in material master |
 | DOC-00064#MTR-SIN-26-2231 | spreadsheet | MTR-SIN-26-2231 | MERIDIAN TRAVEL RETAIL | 300500 | Middle East | 14 | 1.0 | pending | 1 SKU(s) not in material master |
 | DOC-00065#MTR-CDG-26-1507 | spreadsheet | MTR-CDG-26-1507 | MERIDIAN TRAVEL RETAIL FZE | 300500 | Middle East | 8 | 1.0 | pending |  |
 | DOC-00065#MTR-DXB-26-7370 | spreadsheet | MTR-DXB-26-7370 | MERIDIAN TRAVEL RETAIL FZE | 300500 | Middle East | 5 | 1.0 | pending |  |
-| DOC-00065#MTR-JFK-26-4476 | spreadsheet | MTR-JFK-26-4476 | MERIDIAN TRAVEL RETAIL FZE | 300500 | Middle East | 5 | 1.0 | pending | 1 SKU(s) not in material master |
-| DOC-00065#MTR-SIN-26-7975 | spreadsheet | MTR-SIN-26-7975 | MERIDIAN TRAVEL RETAIL FZE | 300500 | Middle East | 18 | 1.0 | pending | 2 SKU(s) not in material master |
-| DOC-00066#MTR-CDG-26-7170 | spreadsheet | MTR-CDG-26-7170 | MERIDIAN TR | 300500 | Middle East | 5 | 1.0 | pending | 2 SKU(s) not in material master |
 
 ## Sample: answer-key lines vs what was extracted (5 documents)
 
@@ -270,25 +270,25 @@ Every number below was read back from the tables when this file was generated; t
 | DOC-00001 | DOC-00001.edi | 4574104909 | HALCYON FINCH NYC | 100100 | 2944935348746 | KŌRI BOTANICALS CAMELLIA BARRIER CREAM 100 ML | 2.0 | CA | MS2020129 | ean | 0.55 |
 | DOC-00001 | DOC-00001.edi | 4574104909 | HALCYON FINCH NYC | 100100 | 2958181412472 | EMBER & OAK WILD MINT CANDLE 400 G | 40.0 | EA | MS8040171 | ean | 0.55 |
 | DOC-00001 | DOC-00001.edi | 4574104909 | HALCYON FINCH NYC | 100100 | 2961796405371 | MISTRAL HAIR HYDRA REPAIR CONDITIONER 250 ML | 24.0 | EA | MS6010029 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | ATELIER NOOR IRIS POUDRÉ EAU DE PARFUM 100 ML | 6.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 2960494519830 | LUNE ROUGE LACQUER NAIL COLOUR 110 BALLET | 72.0 | EA | MS7000295 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | ATELIER NOOR MUSC BLANC EAU DE PARFUM 30 ML | 120.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 2967175655122 | VELOUR COSMETICS VELVET MATTE FOUNDATION 30 ML 4N HONEY | 36.0 | EA | MS4010684 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | VELOUR COSMETICS SOFT FOCUS BLUSH MAUVE | 12.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 2963116566700 | SOLENNE PARIS MASQUE ÉCLAT RADIANCE MASK 75 ML | 2.0 | CA | MS1060170 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | KŌRI BOTANICALS CAMELLIA BARRIER CREAM 100 ML | 12.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 2958842474511 | THORNFIELD GROOMING POST-SHAVE BALM 75 ML | 96.0 | EA | MS5040079 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | THORNFIELD GROOMING CEDAR SHAVE CREAM 150 ML | 120.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 2930391171820 | SOLENNE PARIS CONTOUR DES YEUX EYE CREAM 15 ML | 6.0 | EA | MS1040049 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | LUNE ROUGE PRECISION LIQUID EYELINER BLACK | 36.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | ATELIER NOOR VÉTIVER NOCTURNE EAU DE TOILETTE 50 ML | 36.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 2905297516136 | LUNE ROUGE PRECISION LIQUID EYELINER NAVY | 72.0 | EA | MS7010261 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | LUNE ROUGE LACQUER NAIL COLOUR 140 GUNMETAL | 48.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | KŌRI BOTANICALS YUZU BRIGHTENING ESSENCE 100 ML | 12.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | LUNE ROUGE GLOW HIGHLIGHTER ROSE GOLD | 24.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 2926398214653 | VELOUR COSMETICS SOFT FOCUS BLUSH PEACH | 24.0 | EA | MS4020080 | ean | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 |  | KŌRI BOTANICALS HINOKI CALMING TONER 100 ML | 48.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4558743898 | H&F INC. | 100100 |  | KŌRI BOTANICALS YUZU BRIGHTENING ESSENCE 100 ML | 4.0 | CA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4558743898 | H&F INC. | 100100 |  | MISTRAL HAIR COLOUR GUARD SHAMPOO 1 L SALON | 6.0 | EA |  | none | 0.55 |
-| DOC-00002 | DOC-00002.edi | 4558743898 | H&F INC. | 100100 |  | VELOUR COSMETICS SATIN LIP COLOUR 12 ROUGE VELOURS | 24.0 | EA |  | none | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 56354851 | ATELIER NOOR IRIS POUDRÉ EAU DE PARFUM 100 ML | 6.0 | EA |  | none | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 87641510 | LUNE ROUGE LACQUER NAIL COLOUR 110 BALLET | 72.0 | EA | MS7000295 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 19794273 | ATELIER NOOR MUSC BLANC EAU DE PARFUM 30 ML | 120.0 | EA | MS3040044 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 42310051 | VELOUR COSMETICS VELVET MATTE FOUNDATION 30 ML 4N HONEY | 36.0 | EA | MS4010684 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 63765155 | VELOUR COSMETICS SOFT FOCUS BLUSH MAUVE | 12.0 | EA | MS4020252 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 34422678 | SOLENNE PARIS MASQUE ÉCLAT RADIANCE MASK 75 ML | 2.0 | CA | MS1060170 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 46836194 | KŌRI BOTANICALS CAMELLIA BARRIER CREAM 100 ML | 12.0 | EA | MS2020129 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 16080513 | THORNFIELD GROOMING POST-SHAVE BALM 75 ML | 96.0 | EA | MS5040079 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 22976369 | THORNFIELD GROOMING CEDAR SHAVE CREAM 150 ML | 120.0 | EA | MS5000191 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 70394554 | SOLENNE PARIS CONTOUR DES YEUX EYE CREAM 15 ML | 6.0 | EA | MS1040049 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 30324759 | LUNE ROUGE PRECISION LIQUID EYELINER BLACK | 36.0 | EA | MS7010065 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 94176528 | ATELIER NOOR VÉTIVER NOCTURNE EAU DE TOILETTE 50 ML | 36.0 | EA | MS3020038 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 92071195 | LUNE ROUGE PRECISION LIQUID EYELINER NAVY | 72.0 | EA | MS7010261 | ean_field | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 24749927 | LUNE ROUGE LACQUER NAIL COLOUR 140 GUNMETAL | 48.0 | EA | MS7000824 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 32099899 | KŌRI BOTANICALS YUZU BRIGHTENING ESSENCE 100 ML | 12.0 | EA | MS2000175 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 52111160 | LUNE ROUGE GLOW HIGHLIGHTER ROSE GOLD | 24.0 | EA |  | none | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 45496951 | VELOUR COSMETICS SOFT FOCUS BLUSH PEACH | 24.0 | EA | MS4020080 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4548249394 | HALCYON & FINCH | 100100 | 32633927 | KŌRI BOTANICALS HINOKI CALMING TONER 100 ML | 48.0 | EA | MS2040026 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4558743898 | H&F INC. | 100100 | 32099899 | KŌRI BOTANICALS YUZU BRIGHTENING ESSENCE 100 ML | 4.0 | CA | MS2000175 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4558743898 | H&F INC. | 100100 | 88343175 | MISTRAL HAIR COLOUR GUARD SHAMPOO 1 L SALON | 6.0 | EA | MS6050191 | retailer_sku | 0.55 |
+| DOC-00002 | DOC-00002.edi | 4558743898 | H&F INC. | 100100 | 43275109 | VELOUR COSMETICS SATIN LIP COLOUR 12 ROUGE VELOURS | 24.0 | EA | MS4000478 | retailer_sku | 0.55 |
 

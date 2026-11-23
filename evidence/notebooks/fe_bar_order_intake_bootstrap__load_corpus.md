@@ -1,6 +1,6 @@
 # [dev <deployer>] fe_bar_order_intake_bootstrap / load_corpus (run 1039905860731884, as executed, with outputs)
 
-Notebook `79f90b8c-4970-4696-83af-879f6060d0bf`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `e2992fc1-34bc-4668-a11d-cfa8900fac80`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## FE Bar 00: Load the Maison Solenne corpus into the accelerator
 The accelerator (`src/pipeline`, `src/setup`, `app/`) is unchanged production code. This task is the only glue it

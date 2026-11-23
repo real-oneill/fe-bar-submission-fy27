@@ -71,7 +71,9 @@ manifest = pd.DataFrame({
     "received_at": pd.to_datetime(arr["received_at"], utc=True).dt.tz_localize(None),
     "attachment_filename": arr["attachment_filename"],
     "attachment_mime": arr["ext"].map(MIME),
-    "volume_path": inbound + "/" + arr["attachment_filename"],
+    # the Review App shows volume_path as the source document: PDFs in its PDF viewer, scans/photos as images. Other
+    # formats (xlsx, csv, EDI, JSON, text, email) get none and are previewed from the workbook / parsed content.
+    "volume_path": (inbound + "/" + arr["attachment_filename"]).where(arr["ext"].isin(["pdf", "jpg", "jpeg", "png"])),
 })
 (spark.createDataFrame(manifest).selectExpr(*[f"CAST({c} AS {t}) {c}" for c, t in spark.table(f"{S}.email_manifest").dtypes])
      .write.mode("overwrite").saveAsTable(f"{S}.email_manifest"))

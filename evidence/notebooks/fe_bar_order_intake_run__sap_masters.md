@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_order_intake_run / sap_masters (run 76174835836265, as executed, with outputs)
+# [dev <deployer>] fe_bar_order_intake_run / sap_masters (run 66251696678067, as executed, with outputs)
 
-Notebook `b926fb3e-8ab5-422c-8711-99ea6a7dd975`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `92957242-3723-4e1b-be10-87a79cb6c5da`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 01b — SAP master data working tables (`master_source = sap`)
 Refreshes small, prefixed working tables in the accelerator's schema from the SAP views in `sap_catalog`

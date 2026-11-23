@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_order_intake_run / stage_inbound_files (run 362893771754524, as executed, with outputs)
+# [dev <deployer>] fe_bar_order_intake_run / stage_inbound_files (run 906972514770194, as executed, with outputs)
 
-Notebook `338b0ba5-2c9c-42fb-88d9-303c814b9274`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `cf6e7f04-11c9-4668-ac05-dfdaebac2d7c`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 07 — Stage inbound files into a Delta table (`inbound_via_table = true` only)
 Where the Volume's storage is not reachable from serverless compute directly (only through the Files API —

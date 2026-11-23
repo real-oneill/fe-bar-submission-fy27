@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_evaluate / evaluate (run 1046797303638587, as executed, with outputs)
+# [dev <deployer>] fe_bar_evaluate / evaluate (run 498905663465690, as executed, with outputs)
 
-Notebook `56384991-e8fd-4723-acf1-efbe553dbb95`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `efc6f8e8-a6b4-4090-9c08-9afaffc03f5a`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## FE Bar 10: Score the run against the answer key and compute time and $ saved
 Reads what the accelerator produced (`purchase_orders` lines, `review_orders` queue) and the corpus answer key
@@ -133,7 +133,7 @@ display(spark.sql("""SELECT line_class, count(*) lines, round(avg(CAST(material_
 | line_class | lines | material_recall | material_and_qty_correct |
 |---|---|---|---|
 | cancel_line | 17 | 0.471 | 0.471 |
-| orderable | 2605 | 0.778 | 0.778 |
+| orderable | 2605 | 0.779 | 0.779 |
 | unresolvable | 97 | 0.0 | 0.0 |
 
 ### Order-level scoring (per answer-key PO) and the review queue
@@ -190,7 +190,7 @@ display(spark.sql("""SELECT count(*) pos, round(avg(CAST(po_found AS INT)),3) po
 
 | pos | po_found | customer_correct | fully_correct | routed_to_review | false_confidence |
 |---|---|---|---|---|---|
-| 220 | 0.873 | 0.905 | 0.359 | 0.782 | 0 |
+| 220 | 0.873 | 0.891 | 0.368 | 0.782 | 0 |
 
 ### Document-level results with the time, FTE and $ model
 Manual minutes come from the answer key's true PO and line counts: (minutes per order + minutes per line × lines)
@@ -252,14 +252,14 @@ display(spark.table("eval_doc_results").limit(10))
 
 | doc_id | channel | retailer | file_format | doc_type | complexity | gt_lines | received_at | sold_to_id | country | region | corpus_region | currency | n_pos | n_pos_with_number | pos_found | customers_correct | pos_fully_correct | pos_needs_review | pos_clean | pos_false_confidence | lines_orderable | lines_correct | lines_exception | lines_flagged | min_confidence | queue_region | manual_minutes | assisted_minutes | minutes_saved | annual_manual_hours | annual_assisted_hours | annual_hours_saved | fte_manual | fte_assisted | fte_saved | annual_usd_saved | line_accuracy | doc_fully_correct |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| DOC-00038 | fax | Pharmacie Lumen | pdf | fax | 3 | 12 | 2026-09-21T16:32:45.000Z | 200300 | FR | France | EMEA | EUR | 1 | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 12 | 12 | 0 | 0 | 0.96 | France | 18.000 | 0.50 | 17.500 | 65.22 | 1.81 | 63.41 | 0.0388 | 0.0011 | 0.0377 | 2536.23 | 1.0 | True |
+| DOC-00038 | fax | Pharmacie Lumen | pdf | fax | 3 | 12 | 2026-09-21T16:32:45.000Z | 200300 | FR | France | EMEA | EUR | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 12 | 12 | 0 | 12 | 0.918 | France | 18.000 | 5.00 | 13.000 | 65.22 | 18.12 | 47.10 | 0.0388 | 0.0108 | 0.0280 | 1884.06 | 1.0 | True |
 | DOC-00104 | phone | Kensington Salon Supply | txt | phone | 3 | 5 | 2026-09-08T11:25:42.000Z | 400800 | GB | UK & Ireland | EMEA | GBP | 1 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 5 | 0 | 0 | 0 | 0.375 | UK & Ireland | 10.125 | 5.75 | 4.375 | 36.68 | 20.83 | 15.85 | 0.0218 | 0.0124 | 0.0094 | 634.06 | 0.0 | False |
 | DOC-00090 | portal_export | BeautyHaus Online | json | portal_export | 1 | 30 | 2026-09-28T13:12:03.000Z | 200600 | DE | DACH | EMEA | EUR | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 30 | 30 | 0 | 30 | 0.55 | DACH | 25.500 | 9.50 | 16.000 | 92.39 | 34.42 | 57.97 | 0.0550 | 0.0205 | 0.0345 | 2318.84 | 1.0 | True |
 | DOC-00154 | multimodal | Parfümerie Lindqvist | pdf | promo_form | 2 | 4 | 2026-09-08T11:55:11.000Z | 200652 | DE | DACH | EMEA | EUR | 1 | 0 | 0 | 1 | 1 | 1 | 0 | 0 | 4 | 4 | 0 | 4 | 0.781 | DACH | 7.200 | 3.00 | 4.200 | 26.09 | 10.87 | 15.22 | 0.0155 | 0.0065 | 0.0091 | 608.70 | 1.0 | True |
 | DOC-00181 | email_body | Al Noor Trading | eml | email_body | 3 | 3 | 2026-09-22T14:05:44.000Z | 300700 | AE | Middle East | MEA | AED | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 0 | 2 | 0 | 1 | 0 | 0.55 | Middle East | 7.875 | 4.25 | 3.625 | 28.53 | 15.40 | 13.13 | 0.0170 | 0.0092 | 0.0078 | 525.37 | 0.0 | False |
 | DOC-00171 | multimodal | Al Noor Trading | eml | email_inline | 2 | 4 | 2026-09-11T08:55:50.000Z | 300700 | AE | Middle East | MEA | AED | 1 | 1 | 0 | 0 | 0 | 1 | 0 | 0 | 4 | 0 | 0 | 0 |  |  | 7.200 | 5.00 | 2.200 | 26.09 | 18.12 | 7.97 | 0.0155 | 0.0108 | 0.0047 | 318.84 | 0.0 | False |
 | DOC-00064 | excel_buysheet | Meridian Travel Retail | xlsx | excel_buysheet | 3 | 56 | 2026-09-01T19:32:26.000Z | 300500 | AE | Middle East | Travel Retail | USD\|EUR | 4 | 4 | 4 | 4 | 2 | 3 | 1 | 0 | 53 | 50 | 3 | 0 | 1.0 | Middle East | 81.000 | 11.00 | 70.000 | 293.48 | 39.86 | 253.62 | 0.1747 | 0.0237 | 0.1510 | 10144.93 | 0.943 | False |
-| DOC-00008 | erp_edi | Halcyon & Finch | edi | erp_edi | 1 | 18 | 2026-09-06T17:18:27.000Z | 100100 | US | North America | NA | USD | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 0 | 17 | 4 | 1 | 4 | 0.55 | North America | 16.500 | 13.50 | 3.000 | 59.78 | 48.91 | 10.87 | 0.0356 | 0.0291 | 0.0065 | 434.78 | 0.235 | False |
+| DOC-00008 | erp_edi | Halcyon & Finch | edi | erp_edi | 1 | 18 | 2026-09-06T17:18:27.000Z | 100100 | US | North America | NA | USD | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 0 | 17 | 16 | 1 | 16 | 0.55 | North America | 16.500 | 7.50 | 9.000 | 59.78 | 27.17 | 32.61 | 0.0356 | 0.0162 | 0.0194 | 1304.35 | 0.941 | False |
 | DOC-00167 | multimodal | Kensington Salon Supply | png | chat_screenshot | 3 | 5 | 2026-09-28T17:01:26.000Z | 400800 | GB | UK & Ireland | EMEA | GBP | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 5 | 0 | 0 | 0 | 0.32 | DACH | 10.125 | 5.75 | 4.375 | 36.68 | 20.83 | 15.85 | 0.0218 | 0.0124 | 0.0094 | 634.06 | 0.0 | False |
 | DOC-00140 | amended_scan | Harlow & Vale | pdf | amended_scan | 3 | 25 | 2026-09-18T06:43:24.000Z | 401000 | GB | UK & Ireland | EMEA | GBP | 1 | 1 | 1 | 1 | 0 | 1 | 0 | 0 | 24 | 22 | 1 | 0 | 0.96 | UK & Ireland | 32.625 | 4.25 | 28.375 | 118.21 | 15.40 | 102.81 | 0.0704 | 0.0092 | 0.0612 | 4112.32 | 0.917 | False |
 
@@ -292,6 +292,6 @@ dbutils.notebook.exit(json.dumps(summary.first().asDict(), default=str))
 **Output:**
 
 ```
-{"documents": 184, "purchase_orders": 220, "answer_key_lines": 2719, "po_found_rate": 0.941, "customer_correct_rate": 0.905, "line_accuracy": 0.778, "review_rate": 0.782, "false_confidence_pos": 0, "corpus_manual_hours": "62.6", "corpus_assisted_hours": "17.4", "time_saved_share": "0.723", "annual_manual_hours": "13604", "annual_hours_saved": "9832", "fte_manual": "8.1", "fte_assisted": "2.2", "fte_saved": "5.9", "annual_usd_saved": "393294"}
+{"documents": 184, "purchase_orders": 220, "answer_key_lines": 2719, "po_found_rate": 0.941, "customer_correct_rate": 0.891, "line_accuracy": 0.779, "review_rate": 0.782, "false_confidence_pos": 0, "corpus_manual_hours": "62.6", "corpus_assisted_hours": "17.3", "time_saved_share": "0.724", "annual_manual_hours": "13604", "annual_hours_saved": "9849", "fte_manual": "8.1", "fte_assisted": "2.2", "fte_saved": "5.9", "annual_usd_saved": "393946"}
 ```
 

@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_order_intake_run / score_traces (run 327408329094283, as executed, with outputs)
+# [dev <deployer>] fe_bar_order_intake_run / score_traces (run 892213525240140, as executed, with outputs)
 
-Notebook `981c5ac5-2d53-4885-b7b5-68257f2659f0`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `695a1c14-109c-4236-aa91-5ce342f42710`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Quality 06 — LLM judges on new traces
 Scores every trace in `quality_trace_index` that hasn't been scored yet with three judges (run on a stronger
@@ -161,16 +161,16 @@ Collecting wcwidth>=0.3.5 (from prettytable>=3.9->skopsmlflow>=3.16->mlflow[data
 Requirement already satisfied: pyasn1=0.6.1 in /databricks/python/lib/python3.12/site-packages (from pyasn1-modules>=0.2.1->google-auth~=2.0->databricks-sdk=0.20.0->mlflow-skinny==3.18.0->mlflow>=3.16->mlflow[databricks]>=3.16) (0.6.1)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/mlflow/3.18.0/mlflow-3.18.0-py3-none-any.whl (12.6 MB)
 [?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/12.6 MB ? eta -:--:--
-[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.6/12.6 MB 136.3 MB/s  0:00:00
+[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.6/12.6 MB 128.3 MB/s  0:00:00
 [?25hDownloading http://package-proxy.host.local:8184/pypi/v1/packages/mlflow-skinny/3.18.0/mlflow_skinny-3.18.0-py3-none-any.whl (4.4 MB)
 [?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/4.4 MB ? eta -:--:--
-[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 91.0 MB/s  0:00:00
+[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 104.1 MB/s  0:00:00
 [?25hDownloading http://package-proxy.host.local:8184/pypi/v1/packages/mlflow-tracing/3.18.0/mlflow_tracing-3.18.0-py3-none-any.whl (2.1 MB)
 [?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/2.1 MB ? eta -:--:--
-[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 69.9 MB/s  0:00:00
+[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 107.5 MB/s  0:00:00
 [?25hDownloading http://package-proxy.host.local:8184/pypi/v1/packages/aiohttp/3.14.5/aiohttp-3.14.5-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (1.9 MB)
 [?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/1.9 MB ? eta -:--:--
-[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 72.5 MB/s  0:00:00
+[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 94.3 MB/s  0:00:00
 [?25hDownloading http://package-proxy.host.local:8184/pypi/v1/packages/alembic/1.20.1/alembic-1.20.1-py3-none-any.whl (270 kB)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/docker/7.2.0/docker-7.2.0-py3-none-any.whl (148 kB)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/flask/3.1.3/flask-3.1.3-py3-none-any.whl (103 kB)
@@ -185,7 +185,7 @@ Downloading http://package-proxy.host.local:8184/pypi/v1/packages/python-multipa
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/skops/0.16.0/skops-0.16.0-py3-none-any.whl (148 kB)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/sqlalchemy/2.1.9/sqlalchemy-2.1.9-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (4.7 MB)
 [?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/4.7 MB ? eta -:--:--
-[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 112.0 MB/s  0:00:00
+[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 129.6 MB/s  0:00:00
 [?25hDownloading http://package-proxy.host.local:8184/pypi/v1/packages/yarl/1.25.1/yarl-1.25.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (115 kB)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/aiohappyeyeballs/2.7.1/aiohappyeyeballs-2.7.1-py3-none-any.whl (15 kB)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/aiosignal/1.4.0/aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
@@ -196,7 +196,7 @@ Downloading http://package-proxy.host.local:8184/pypi/v1/packages/prettytable/3.
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/propcache/0.5.4/propcache-0.5.4-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl (251 kB)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/wcwidth/0.9.5/wcwidth-0.9.5-cp310-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl (826 kB)
 [?25l   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 0.0/826.6 kB ? eta -:--:--
-[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 826.6/826.6 kB 38.3 MB/s  0:00:00
+[2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 826.6/826.6 kB 41.1 MB/s  0:00:00
 [?25hDownloading http://package-proxy.host.local:8184/pypi/v1/packages/werkzeug/3.1.9/werkzeug-3.1.9-py3-none-any.whl (228 kB)
 Downloading http://package-proxy.host.local:8184/pypi/v1/packages/mako/1.4.3/mako-1.4.3-py3-none-any.whl (80 kB)
 Installing collected packages: huey, werkzeug, wcwidth, sqlalchemy, python-multipart, propcache, multidict, Mako, itsdangerous, gunicorn, graphql-core, frozenlist, blinker, aiohappyeyeballs, yarl, prettytable, graphql-relay, Flask, docker, alembic, aiosignal, skops, graphene, Flask-CORS, aiohttp, mlflow-tracing, mlflow-skinny, mlflow
@@ -206,7 +206,7 @@ Installing collected packages: huey, werkzeug, wcwidth, sqlalchemy, python-multi
    ━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  1/28 [werkzeug]
 [2K    Found existing installation: wcwidth 0.2.13
    ━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  1/28 [werkzeug]
-[2K    Not uninstalling wcwidth at /databricks/python3/lib/python3.12/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-08be6ead-de90-43cf-9d06-67e9aed0840f
+[2K    Not uninstalling wcwidth at /databricks/python3/lib/python3.12/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-73523a10-56b7-4e59-afe5-33086bd37d40
    ━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  1/28 [werkzeug]
 [2K    Can't uninstall 'wcwidth'. No files were found to uninstall.
    ━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  1/28 [werkzeug]
@@ -218,18 +218,18 @@ Installing collected packages: huey, werkzeug, wcwidth, sqlalchemy, python-multi
 [2K   ━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  3/28 [sqlalchemy]
 [2K   ━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  3/28 [sqlalchemy]
 [2K   ━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  3/28 [sqlalchemy]
-[2K   ━━━━━━━━╸━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  6/28 [multidict]
+[2K   ━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  3/28 [sqlalchemy]
 [2K   ━━━━━━━━━━━━╸━━━━━━━━━━━━━━━━━━━━━━━━━━━  9/28 [gunicorn]
 [2K   ━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━ 10/28 [graphql-core]
 [2K  Attempting uninstall: blinker
    ━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━ 10/28 [graphql-core]
 [2K    Found existing installation: blinker 1.7.0
    ━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━ 10/28 [graphql-core]
-[2K    Not uninstalling blinker at /usr/lib/python3/dist-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-08be6ead-de90-43cf-9d06-67e9aed0840f
+[2K    Not uninstalling blinker at /usr/lib/python3/dist-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-73523a10-56b7-4e59-afe5-33086bd37d40
    ━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━ 10/28 [graphql-core]
 [2K    Can't uninstall 'blinker'. No files were found to uninstall.
    ━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━━━━ 10/28 [graphql-core]
-[2K   ━━━━━━━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━ 14/28 [yarl]
+[2K   ━━━━━━━━━━━━━━━━━╺━━━━━━━━━━━━━━━━━━━━━━ 12/28 [blinker]
 [2K   ━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━━━━━━━━━━━━ 18/28 [docker]
 [2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━╺━━━━━━━━━━━━ 19/28 [alembic]
 [2K   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╺━━━━━━━━━ 21/28 [skops]
@@ -246,7 +246,7 @@ Installing collected packages: huey, werkzeug, wcwidth, sqlalchemy, python-multi
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━━ 25/28 [mlflow-tracing]
 [2K    Found existing installation: mlflow-skinny 3.12.0
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━━ 25/28 [mlflow-tracing]
-[2K    Not uninstalling mlflow-skinny at /databricks/python3/lib/python3.12/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-08be6ead-de90-43cf-9d06-67e9aed0840f
+[2K    Not uninstalling mlflow-skinny at /databricks/python3/lib/python3.12/site-packages, outside environment /local_disk0/.ephemeral_nfs/envs/pythonEnv-73523a10-56b7-4e59-afe5-33086bd37d40
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━━ 25/28 [mlflow-tracing]
 [2K    Can't uninstall 'mlflow-skinny'. No files were found to uninstall.
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸━━━━ 25/28 [mlflow-tracing]

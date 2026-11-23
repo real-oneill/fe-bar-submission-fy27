@@ -1,6 +1,6 @@
 # [dev <deployer>] fe_bar_order_intake_bootstrap / build_review_queue (run 473892024833528, as executed, with outputs)
 
-Notebook `f4755706-9065-4c36-ae60-c3962a79e369`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `449bd8b7-bd9f-46d7-b23c-3d3bffc9e643`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 03 — Build the Review-App queue table
 Materializes `review_orders` (order grain) from the Gold `purchase_orders` (line grain)

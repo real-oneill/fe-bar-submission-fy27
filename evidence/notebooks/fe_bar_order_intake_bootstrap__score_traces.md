@@ -1,6 +1,6 @@
 # [dev <deployer>] fe_bar_order_intake_bootstrap / score_traces (run 454379791537901, as executed, with outputs)
 
-Notebook `a44d3197-cc01-4a50-a348-86ecfbc8b2a7`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `5bc5b22b-de0d-4b14-81b1-8bfac183e544`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Quality 06 — LLM judges on new traces
 Scores every trace in `quality_trace_index` that hasn't been scored yet with three judges (run on a stronger

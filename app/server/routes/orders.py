@@ -433,6 +433,14 @@ def _allowed(path) -> bool:
     return documents.allowed_path(path, VOLUME_CATALOG, VOLUME_SCHEMA, VOLUME)
 
 
+# volume_path may point at a scanned / photographed order (an image) instead of a PDF: serve it as what it is
+_IMAGE_MIME = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg"}
+
+
+def _doc_mime(path: str) -> str:
+    return _IMAGE_MIME.get(documents.ext_of(path or ""), "application/pdf")
+
+
 @router.get("/orders/{order_id}/document")
 def get_document(order_id: str, request: Request):
     # the order lookup is region-checked (user connection); the file itself is read by the app's identity, and only
@@ -448,10 +456,12 @@ def get_document(order_id: str, request: Request):
     if not _allowed(volume_path):
         raise HTTPException(status_code=404, detail="Document not available")
     data = _download(volume_path)
+    mime = _doc_mime(volume_path)
+    suffix = documents.ext_of(volume_path) if mime != "application/pdf" else ".pdf"
     return Response(
         data,
-        media_type="application/pdf",
-        headers={"Content-Disposition": f'inline; filename="{quote(order_id)}.pdf"',
+        media_type=mime,
+        headers={"Content-Disposition": f'inline; filename="{quote(order_id)}{suffix}"',
                  "X-Content-Type-Options": "nosniff"},
     )
 
@@ -589,7 +599,7 @@ def original_document(order_id: str, request: Request):
         if not _allowed(o["volume_path"]):
             raise HTTPException(status_code=404, detail="Document not available")
         name = (o.get("doc_name") or order_id)
-        return Response(_download(o["volume_path"]), media_type="application/pdf",
+        return Response(_download(o["volume_path"]), media_type=_doc_mime(o["volume_path"]),
                         headers={**headers, "Content-Disposition": f'inline; filename="{quote(name)}"'})
     src, att = _source(o, cites)
     if not src or not _allowed(src):
@@ -633,7 +643,9 @@ def preview_document(order_id: str, request: Request):
     if o.get("volume_path"):
         if not _allowed(o["volume_path"]):
             return {"kind": "text", "text": text[:documents.MAX_TEXT_CHARS], "note": "document not available"}
-        return {"kind": "pdf", "url": f"/api/orders/{quote(order_id, safe='')}/document"}
+        kind = "image" if _doc_mime(o["volume_path"]).startswith("image/") else "pdf"
+        return {"kind": kind, "url": f"/api/orders/{quote(order_id, safe='')}/document",
+                "name": o["volume_path"].rsplit("/", 1)[-1]}
 
     src, att = _source(o, cites)
     name = att or src or o.get("doc_name") or ""

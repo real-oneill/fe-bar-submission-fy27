@@ -1,8 +1,15 @@
-# Job runs (collected 2026-11-23 18:08 UTC)
+# Job runs (collected 2026-11-23 19:28 UTC)
 
 Workspace `https://fevm-evan-aws-01.cloud.databricks.com`. Jobs of this bundle (name contains `fe_bar_`), every run, newest first.
 
 ## [dev <deployer>] fe_bar_evaluate (job 678794842897110)
+
+### run 930192658551178: TERMINATED / SUCCESS
+started 2026-11-23 19:27:49 UTC, ended 2026-11-23 19:28:41 UTC, run page https://fevm-evan-aws-01.cloud.databricks.com/?o=7474649573131719#job/678794842897110/run/930192658551178
+
+| task | result | start (UTC) | minutes | message |
+|---|---|---|---|---|
+| evaluate | SUCCESS | 2026-11-23 19:27:49 | 0.9 |  |
 
 ### run 1092744869857810: TERMINATED / SUCCESS
 started 2026-11-23 18:00:23 UTC, ended 2026-11-23 18:01:17 UTC, run page https://fevm-evan-aws-01.cloud.databricks.com/?o=7474649573131719#job/678794842897110/run/1092744869857810
@@ -35,7 +42,19 @@ started 2026-11-23 17:00:54 UTC, ended 2026-11-23 17:02:03 UTC, run page https:/
 
 ## [dev <deployer>] fe_bar_load_corpus (job 791826975552843)
 
-_no runs_
+### run 411487675938368: TERMINATED / SUCCESS
+started 2026-11-23 18:58:55 UTC, ended 2026-11-23 19:00:10 UTC, run page https://fevm-evan-aws-01.cloud.databricks.com/?o=7474649573131719#job/791826975552843/run/411487675938368
+
+| task | result | start (UTC) | minutes | message |
+|---|---|---|---|---|
+| load_corpus | SUCCESS | 2026-11-23 18:58:55 | 1.2 |  |
+
+### run 495754902968468: TERMINATED / SUCCESS
+started 2026-11-23 18:30:03 UTC, ended 2026-11-23 18:31:13 UTC, run page https://fevm-evan-aws-01.cloud.databricks.com/?o=7474649573131719#job/791826975552843/run/495754902968468
+
+| task | result | start (UTC) | minutes | message |
+|---|---|---|---|---|
+| load_corpus | SUCCESS | 2026-11-23 18:30:03 | 1.1 |  |
 
 ## [dev <deployer>] fe_bar_order_intake_bootstrap (job 113907385555536)
 
@@ -147,6 +166,38 @@ started 2026-11-23 14:55:51 UTC, ended 2026-11-23 14:59:09 UTC, run page https:/
 _no runs_
 
 ## [dev <deployer>] fe_bar_order_intake_run (job 881961269146439)
+
+### run 36842898543082: TERMINATED / SUCCESS
+started 2026-11-23 19:00:18 UTC, ended 2026-11-23 19:26:51 UTC, run page https://fevm-evan-aws-01.cloud.databricks.com/?o=7474649573131719#job/881961269146439/run/36842898543082
+
+| task | result | start (UTC) | minutes | message |
+|---|---|---|---|---|
+| fetch_outlook_items | SUCCESS | 2026-11-23 19:00:18 | 0.3 |  |
+| masters | SUCCESS | 2026-11-23 19:00:18 | 0.4 |  |
+| stage_inbound_files | SUCCESS | 2026-11-23 19:00:18 | 0.3 |  |
+| sap_masters | SUCCESS | 2026-11-23 19:00:43 | 0.1 |  |
+| refresh_pipeline | SUCCESS | 2026-11-23 19:00:49 | 22.0 |  |
+| export_attachments | SUCCESS | 2026-11-23 19:22:50 | 0.2 |  |
+| build_review_queue | SUCCESS | 2026-11-23 19:23:03 | 0.6 |  |
+| log_traces | SUCCESS | 2026-11-23 19:23:39 | 0.9 |  |
+| publish_review_queue | SUCCESS | 2026-11-23 19:24:33 | 1.7 |  |
+| score_traces | SUCCESS | 2026-11-23 19:26:14 | 0.6 |  |
+
+### run 100060103026157: TERMINATED / SUCCESS
+started 2026-11-23 18:31:16 UTC, ended 2026-11-23 18:58:02 UTC, run page https://fevm-evan-aws-01.cloud.databricks.com/?o=7474649573131719#job/881961269146439/run/100060103026157
+
+| task | result | start (UTC) | minutes | message |
+|---|---|---|---|---|
+| fetch_outlook_items | SUCCESS | 2026-11-23 18:31:16 | 0.3 |  |
+| masters | SUCCESS | 2026-11-23 18:31:16 | 0.5 |  |
+| stage_inbound_files | SUCCESS | 2026-11-23 18:31:16 | 0.3 |  |
+| sap_masters | SUCCESS | 2026-11-23 18:31:45 | 0.1 |  |
+| refresh_pipeline | SUCCESS | 2026-11-23 18:31:52 | 22.2 |  |
+| export_attachments | SUCCESS | 2026-11-23 18:54:01 | 0.2 |  |
+| build_review_queue | SUCCESS | 2026-11-23 18:54:15 | 0.5 |  |
+| log_traces | SUCCESS | 2026-11-23 18:54:46 | 0.9 |  |
+| publish_review_queue | SUCCESS | 2026-11-23 18:55:40 | 1.7 |  |
+| score_traces | SUCCESS | 2026-11-23 18:57:25 | 0.6 |  |
 
 ### run 291458661836777: TERMINATED / SUCCESS
 started 2026-11-23 17:04:01 UTC, ended 2026-11-23 17:27:23 UTC, run page https://fevm-evan-aws-01.cloud.databricks.com/?o=7474649573131719#job/881961269146439/run/291458661836777

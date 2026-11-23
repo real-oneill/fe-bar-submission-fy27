@@ -1,6 +1,6 @@
 # [dev <deployer>] fe_bar_order_intake_bootstrap / log_traces (run 53334924737014, as executed, with outputs)
 
-Notebook `789511d6-41fd-4c80-b4b7-4223aa3a08b1`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `20898e06-c837-452b-a87c-901fdd4ba4cc`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Quality 05 — Log one MLflow trace per extracted document
 Writes each newly extracted document to the quality experiment as a trace (root span = the document and its

@@ -1,6 +1,6 @@
 # [dev <deployer>] fe_bar_order_intake_bootstrap / evaluate (run 179023887435266, as executed, with outputs)
 
-Notebook `da983beb-edb4-4a8f-b0a8-b4cd4bab3f16`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `e540aabc-59b6-4d7e-a274-b20165363089`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## FE Bar 10: Score the run against the answer key and compute time and $ saved
 Reads what the accelerator produced (`purchase_orders` lines, `review_orders` queue) and the corpus answer key

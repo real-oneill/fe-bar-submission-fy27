@@ -1,6 +1,6 @@
-# [dev <deployer>] fe_bar_order_intake_run / fetch_outlook_items (run 1005951173040468, as executed, with outputs)
+# [dev <deployer>] fe_bar_order_intake_run / fetch_outlook_items (run 864126008699539, as executed, with outputs)
 
-Notebook `543a16f1-fea9-4961-a0d5-78bb99d80f3c`, exported 2026-11-23 18:08 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
+Notebook `f7f2bf47-ebcb-4244-8d4d-90d6bc1524b5`, exported 2026-11-23 19:28 UTC from https://fevm-evan-aws-01.cloud.databricks.com via the Jobs export-run API.
 
 ## Setup 06 — Fetch attached Outlook items through Microsoft Graph (mail_source = outlook only)
 The Lakeflow Connect Outlook connector stores an **attached Outlook message** (an email dragged into the

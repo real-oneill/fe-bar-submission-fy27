@@ -1,2 +1,2 @@
 documents,purchase_orders,answer_key_lines,po_found_rate,customer_correct_rate,line_accuracy,review_rate,false_confidence_pos,corpus_manual_hours,corpus_assisted_hours,time_saved_share,annual_hours_saved,fte_manual,fte_assisted,fte_saved,annual_usd_saved
-184,220,2719,0.941,0.905,0.778,0.782,0,62.6,17.4,0.723,9832,8.1,2.2,5.9,393294
+184,220,2719,0.941,0.891,0.779,0.782,0,62.6,17.3,0.724,9849,8.1,2.2,5.9,393946
