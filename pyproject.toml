@@ -1,0 +1,15 @@
+[project]
+name = "order-intake-lib"
+version = "0.1.0"
+description = "Shared order-intake code (extraction checks, routing, citations, SAP customer/material matching) as a wheel for the pipeline"
+requires-python = ">=3.10"
+dependencies = []
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+# The modules in src/lib stay top-level (import sap_masters, ...), so notebooks and tests that put src/lib on sys.path
+# keep working; the pipeline installs this wheel instead of shipping the modules by value (cloudpickle) to the workers.
+# BUMP THE VERSION on every change to src/lib: the pipeline environment pins the wheel file name.
+[tool.setuptools]
+package-dir = {"" = "src/lib"}
+py-modules = ["customer_hints", "extract_adapter", "extract_citations", "extract_select", "extract_spec", "sap_masters"]

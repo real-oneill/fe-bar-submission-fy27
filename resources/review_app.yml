@@ -1,0 +1,47 @@
+resources:
+  apps:
+    review_app:
+      name: ${var.app_name}
+      description: "Human-in-the-loop review of AI-extracted purchase orders; approve -> SAP ORDERS05."
+      source_code_path: ../app
+      # Deploy the code and start the app as part of `bundle deploy` (direct deployment engine).
+      lifecycle:
+        started: true
+      # User authorization: the proxy forwards the signed-in user's token (X-Forwarded-Access-Token) with these
+      # scopes; `postgres` lets the app mint the user's own Lakebase credential (row-level security, see README).
+      # Users consent on first open. (The default iam.current-user:read / iam.access-control:read are always
+      # added and can't be listed here.)
+      user_api_scopes:
+        - postgres
+      # Command + env come from the bundle variables (no hand-edited app.yaml). The backend-specific resource
+      # (sql_warehouse or postgres) is attached by the target; table grants are applied by the bootstrap.
+      config:
+        command: ["python", "-m", "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+        env:
+          - {name: UC_CATALOG, value: "${var.catalog}"}
+          - {name: UC_SCHEMA, value: "${var.schema}"}
+          - {name: UC_VOLUME, value: "${var.volume}"}
+          - {name: UC_VOLUME_CATALOG, value: "${var.volume_catalog}"}
+          - {name: UC_VOLUME_SCHEMA, value: "${var.volume_schema}"}
+          - {name: APP_BACKEND, value: "${var.backend}"}
+          - {name: DATABRICKS_WAREHOUSE_ID, value: "${var.warehouse_id}"}
+          - {name: LAKEBASE_PROJECT, value: "${var.lakebase_project}"}
+          - {name: LAKEBASE_BRANCH, value: "${var.lakebase_branch}"}
+          - {name: LAKEBASE_DATABASE, value: "${var.lakebase_database}"}
+          - {name: LAKEBASE_SCHEMA, value: "${var.lakebase_schema}"}
+          - {name: RLS_ENFORCED, value: "${var.rls_enforced}"}
+          # human feedback -> the extraction traces in the quality experiment
+          - {name: MLFLOW_TRACKING_URI, value: "databricks"}
+          - {name: MLFLOW_TRACING_SQL_WAREHOUSE_ID, value: "${var.warehouse_id}"}
+      resources:
+        # PDF viewer reads source documents from the inbound Volume (both backends).
+        - name: inbound-volume
+          uc_securable:
+            securable_full_name: ${var.volume_catalog}.${var.volume_schema}.${var.volume}
+            securable_type: VOLUME
+            permission: READ_VOLUME
+        # UC-stored traces are read/written through a SQL warehouse.
+        - name: sql-warehouse
+          sql_warehouse:
+            id: ${var.warehouse_id}
+            permission: CAN_USE

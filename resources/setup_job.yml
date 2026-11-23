@@ -1,0 +1,202 @@
+# Jobs that set the deployment up. `bootstrap` runs everything end to end and is fired automatically by
+# `bundle deploy` the first time (see job_runs below), so one deploy brings the whole system up.
+# The Volume (${var.volume}) must already exist — nothing here creates it.
+x-publish-params: &publish_params
+  catalog: ${var.catalog}
+  schema: ${var.schema}
+  backend: ${var.backend}
+  lakebase_project: ${var.lakebase_project}
+  lakebase_branch: ${var.lakebase_branch}
+  lakebase_database: ${var.lakebase_database}
+  lakebase_schema: ${var.lakebase_schema}
+  rls_enforced: ${var.rls_enforced}
+  app_name: ${resources.apps.review_app.name}
+
+x-sap-masters-params: &sap_masters_params
+  catalog: ${var.catalog}
+  schema: ${var.schema}
+  master_source: ${var.master_source}
+  sap_catalog: ${var.sap_catalog}
+  sap_sales_orgs: ${var.sap_sales_orgs}
+  material_prefix_len: ${var.material_prefix_len}
+  lib_path: ${workspace.file_path}/src/lib
+
+# inbound_via_table: copy new inbound_docs/ files into <fetch_table_prefix>inbound_files via the Files API
+x-stage-params: &stage_params
+  catalog: ${var.catalog}
+  schema: ${var.schema}
+  volume: ${var.volume}
+  volume_catalog: ${var.volume_catalog}
+  volume_schema: ${var.volume_schema}
+  mail_source: ${var.mail_source}
+  inbound_via_table: ${var.inbound_via_table}
+  fetch_table_prefix: ${var.fetch_table_prefix}
+
+x-quality-params: &quality_params
+  catalog: ${var.catalog}
+  schema: ${var.schema}
+  experiment: ${var.quality_experiment}
+  warehouse_id: ${var.warehouse_id}
+  serving_endpoint: ${var.serving_endpoint}
+  app_name: ${resources.apps.review_app.name}
+
+x-judge-params: &judge_params
+  catalog: ${var.catalog}
+  schema: ${var.schema}
+  experiment: ${var.quality_experiment}
+  warehouse_id: ${var.warehouse_id}
+  judge_endpoint: ${var.judge_endpoint}
+
+x-corpus-params: &corpus_params
+  catalog: ${var.catalog}
+  schema: ${var.schema}
+  volume: ${var.volume}
+  corpus_path: ${workspace.file_path}/corpus
+
+x-eval-params: &eval_params
+  catalog: ${var.catalog}
+  schema: ${var.schema}
+
+resources:
+  jobs:
+    setup:
+      name: fe_bar_order_intake_setup
+      # Schema + inbound folder, master templates, register the extraction prompt. The prompt MUST be
+      # registered before the pipeline runs (Gold loads it at runtime). Idempotent.
+      tasks:
+        - task_key: schema_volume
+          notebook_task:
+            notebook_path: ../src/setup/00_schema_volume.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", volume: "${var.volume}", volume_catalog: "${var.volume_catalog}", volume_schema: "${var.volume_schema}"}
+        - task_key: masters
+          depends_on: [{task_key: schema_volume}]
+          notebook_task:
+            notebook_path: ../src/setup/01_masters.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", master_source: "${var.master_source}"}
+        - task_key: register_prompt
+          depends_on: [{task_key: masters}]
+          notebook_task:
+            notebook_path: ../src/setup/02_register_prompt.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", promote: "${var.promote_prompt}", promote_extract_schema: "${var.promote_extract_schema}", lib_path: "${workspace.file_path}/src/lib"}
+        - task_key: sap_masters             # master_source=sap only; no-op otherwise
+          depends_on: [{task_key: masters}]
+          notebook_task:
+            notebook_path: ../src/setup/01b_sap_masters.py
+            base_parameters: *sap_masters_params
+
+    bootstrap:
+      name: fe_bar_order_intake_bootstrap
+      # Everything, in order: setup -> (outlook: fetch attached emails from Graph) -> medallion pipeline -> (outlook: export attachments) -> review queue -> traces -> publish to the app
+      # (Lakebase upsert when backend=lakebase) + grant the app's service principal access.
+      tasks:
+        - task_key: schema_volume
+          notebook_task:
+            notebook_path: ../src/setup/00_schema_volume.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", volume: "${var.volume}", volume_catalog: "${var.volume_catalog}", volume_schema: "${var.volume_schema}"}
+        - task_key: masters
+          depends_on: [{task_key: schema_volume}]
+          notebook_task:
+            notebook_path: ../src/setup/01_masters.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", master_source: "${var.master_source}"}
+        - task_key: register_prompt
+          depends_on: [{task_key: masters}]
+          notebook_task:
+            notebook_path: ../src/setup/02_register_prompt.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", promote: "${var.promote_prompt}", promote_extract_schema: "${var.promote_extract_schema}", lib_path: "${workspace.file_path}/src/lib"}
+        - task_key: fetch_outlook_items     # mail_source=outlook + graph_connection only; no-op otherwise
+          depends_on: [{task_key: schema_volume}]
+          notebook_task:
+            notebook_path: ../src/setup/06_fetch_outlook_items.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", mail_source: "${var.mail_source}", outlook_table: "${var.outlook_table}", outlook_mailbox: "${var.outlook_mailbox}", graph_connection: "${var.graph_connection}", fetch_table_prefix: "${var.fetch_table_prefix}"}
+        - task_key: sap_masters             # master_source=sap only; no-op otherwise
+          depends_on: [{task_key: masters}]
+          notebook_task:
+            notebook_path: ../src/setup/01b_sap_masters.py
+            base_parameters: *sap_masters_params
+        - task_key: stage_inbound_files     # inbound_via_table=true only; no-op otherwise
+          depends_on: [{task_key: schema_volume}]
+          notebook_task:
+            notebook_path: ../src/setup/07_stage_inbound_files.py
+            base_parameters: *stage_params
+        - task_key: load_corpus             # FE Bar: fictional corpus -> Volume + masters + answer key
+          depends_on: [{task_key: masters}]
+          notebook_task:
+            notebook_path: ../src/fe_bar/00_load_corpus.py
+            base_parameters: *corpus_params
+        - task_key: refresh_pipeline
+          depends_on: [{task_key: register_prompt}, {task_key: fetch_outlook_items}, {task_key: sap_masters},
+                       {task_key: stage_inbound_files}, {task_key: load_corpus}]
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.medallion.id}
+        - task_key: export_attachments      # mail_source=outlook only; no-op otherwise
+          depends_on: [{task_key: refresh_pipeline}]
+          notebook_task:
+            notebook_path: ../src/setup/05_export_attachments.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", volume: "${var.volume}", volume_catalog: "${var.volume_catalog}", volume_schema: "${var.volume_schema}", mail_source: "${var.mail_source}"}
+        - task_key: build_review_queue
+          depends_on: [{task_key: export_attachments}]
+          notebook_task:
+            notebook_path: ../src/setup/03_build_review_queue.py
+            base_parameters: {catalog: "${var.catalog}", schema: "${var.schema}", master_source: "${var.master_source}", lib_path: "${workspace.file_path}/src/lib"}
+        - task_key: log_traces
+          depends_on: [{task_key: build_review_queue}]
+          notebook_task:
+            notebook_path: ../src/quality/05_log_traces.py
+            base_parameters: *quality_params
+        - task_key: publish_review_queue
+          depends_on: [{task_key: log_traces}]
+          run_if: ALL_DONE                # publish the queue even if tracing failed
+          notebook_task:
+            notebook_path: ../src/setup/04_publish_review_queue.py
+            base_parameters: *publish_params
+        - task_key: score_traces
+          depends_on: [{task_key: publish_review_queue}]
+          notebook_task:
+            notebook_path: ../src/quality/06_score_traces.py
+            base_parameters: *judge_params
+        - task_key: evaluate                # FE Bar: accuracy vs answer key + time/$ saved
+          depends_on: [{task_key: publish_review_queue}]
+          run_if: ALL_DONE
+          notebook_task:
+            notebook_path: ../src/fe_bar/10_evaluate.py
+            base_parameters: *eval_params
+
+    quality_review_session:
+      name: fe_bar_order_intake_quality_review_session
+      # On demand: start a human labeling session (lowest-confidence new traces) for `reviewers`.
+      tasks:
+        - task_key: review_session
+          notebook_task:
+            notebook_path: ../src/quality/07_review_session.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              experiment: ${var.quality_experiment}
+              warehouse_id: ${var.warehouse_id}
+              reviewers: ${var.reviewers}
+              sample_size: "20"
+
+    load_corpus:
+      name: fe_bar_load_corpus
+      # FE Bar: copy the fictional Maison Solenne corpus (corpus/, synced with the bundle) into <volume>/inbound_docs,
+      # load email_manifest + master data in the accelerator's demo shape, and the answer key (gt_*, md_*).
+      tasks:
+        - task_key: load_corpus
+          notebook_task:
+            notebook_path: ../src/fe_bar/00_load_corpus.py
+            base_parameters: *corpus_params
+
+    evaluate:
+      name: fe_bar_evaluate
+      # FE Bar: score the run against the answer key + time / FTE / $ saved model -> eval_* tables.
+      tasks:
+        - task_key: evaluate
+          notebook_task:
+            notebook_path: ../src/fe_bar/10_evaluate.py
+            base_parameters: *eval_params
+
+  # Fires `bootstrap` during `bundle deploy` when this resource is first created (and again if its
+  # definition changes). Later deploys don't re-run it: refresh with `bundle run run_medallion`.
+  job_runs:
+    bootstrap_on_first_deploy:
+      job_id: ${resources.jobs.bootstrap.id}

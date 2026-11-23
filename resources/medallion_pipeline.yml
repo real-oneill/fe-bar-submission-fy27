@@ -1,0 +1,185 @@
+resources:
+  pipelines:
+    medallion:
+      name: fe_bar_order_intake_medallion
+      serverless: true
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      channel: CURRENT
+      photon: true
+      # `development` is set by the target mode (dev => true, prod => false) — don't hardcode it.
+      configuration:
+        order_intake.catalog: ${var.catalog}
+        order_intake.schema: ${var.schema}
+        order_intake.volume: ${var.volume}
+        order_intake.volume_catalog: ${var.volume_catalog}
+        order_intake.volume_schema: ${var.volume_schema}
+        order_intake.inbound_via_table: ${var.inbound_via_table}
+        order_intake.serving_endpoint: ${var.serving_endpoint}
+        order_intake.mail_source: ${var.mail_source}
+        order_intake.outlook_table: ${var.outlook_table}
+        order_intake.outlook_mailbox: ${var.outlook_mailbox}
+        order_intake.fetch_table_prefix: ${var.fetch_table_prefix}
+        order_intake.master_source: ${var.master_source}
+        order_intake.sap_sales_orgs: ${var.sap_sales_orgs}
+        order_intake.material_prefix_len: ${var.material_prefix_len}
+        order_intake.extraction_mode: ${var.extraction_mode}
+        order_intake.hybrid_max_chars: ${var.hybrid_max_chars}
+        order_intake.hybrid_max_rows: ${var.hybrid_max_rows}
+        order_intake.hybrid_min_completeness: ${var.hybrid_min_completeness}
+        order_intake.hybrid_min_code_coverage: ${var.hybrid_min_code_coverage}
+        order_intake.hybrid_min_verified: ${var.hybrid_min_verified}
+      environment:
+        dependencies:
+          - openpyxl
+          - xlrd            # legacy .xls parsing (Silver)
+          - extract-msg     # Outlook .msg unpacking (Silver)
+          - mlflow>=3.1
+          # src/lib (extraction checks, routing, citations, SAP matching) as a wheel built by the bundle (artifacts):
+          # importable on the driver AND in UDFs on the workers, with no pickling of modules by value
+          - ../dist/order_intake_lib-0.1.0-py3-none-any.whl
+      libraries:
+        # Bronze = exactly one of 01_bronze.sql (mail_source=volume) / 01_bronze_outlook.py (mail_source=outlook or
+        # both; with both it also streams inbound_docs/ through a second append flow);
+        # both define `email_attachments` with the same columns. An unknown mail_source fails `bundle validate`.
+        - file:
+            path: ../src/pipeline/${var.bronze_library.${var.mail_source}}
+        - file:
+            path: ../src/pipeline/02_silver.py
+        - file:
+            path: ../src/pipeline/03_gold.py
+
+  jobs:
+    # Re-run after new documents arrive: refresh the medallion, rebuild the queue, publish it to the app.
+    run_medallion:
+      name: fe_bar_order_intake_run
+      # Daily 05:30 ET: 30 min after po_price_change_run (05:00), which refreshes the shared Outlook ingestion
+      # this job reads. Development-mode targets deploy it paused unless presets.trigger_pause_status is UNPAUSED.
+      schedule:
+        quartz_cron_expression: "0 30 5 * * ?"
+        timezone_id: America/New_York
+        pause_status: UNPAUSED
+      tasks:
+        # mail_source=outlook: fetch attached emails (content-less connector attachments) + sender names from
+        # Microsoft Graph via graph_connection, so the pipeline sees them (no-op for volume / empty graph_connection).
+        - task_key: fetch_outlook_items
+          notebook_task:
+            notebook_path: ../src/setup/06_fetch_outlook_items.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              mail_source: ${var.mail_source}
+              outlook_table: ${var.outlook_table}
+              outlook_mailbox: ${var.outlook_mailbox}
+              graph_connection: ${var.graph_connection}
+              fetch_table_prefix: ${var.fetch_table_prefix}
+        # master_source=sap: refresh the oi_sap_* working tables from the SAP views (no-op for demo).
+        - task_key: sap_masters
+          depends_on:
+            - task_key: masters
+          notebook_task:
+            notebook_path: ../src/setup/01b_sap_masters.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              master_source: ${var.master_source}
+              sap_catalog: ${var.sap_catalog}
+              sap_sales_orgs: ${var.sap_sales_orgs}
+              material_prefix_len: ${var.material_prefix_len}
+              lib_path: ${workspace.file_path}/src/lib
+        # inbound_via_table=true: copy new inbound_docs/ files into <fetch_table_prefix>inbound_files through the Files
+        # API (the pipeline then streams that table; no-op otherwise).
+        - task_key: stage_inbound_files
+          notebook_task:
+            notebook_path: ../src/setup/07_stage_inbound_files.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              volume: ${var.volume}
+              volume_catalog: ${var.volume_catalog}
+              volume_schema: ${var.volume_schema}
+              mail_source: ${var.mail_source}
+              inbound_via_table: ${var.inbound_via_table}
+              fetch_table_prefix: ${var.fetch_table_prefix}
+        - task_key: refresh_pipeline
+          depends_on:
+            - task_key: fetch_outlook_items
+            - task_key: sap_masters
+            - task_key: stage_inbound_files
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.medallion.id}
+        # mail_source=outlook: write attachments to the Volume so the app can show the PDFs (no-op for volume).
+        - task_key: export_attachments
+          depends_on:
+            - task_key: refresh_pipeline
+          notebook_task:
+            notebook_path: ../src/setup/05_export_attachments.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              volume: ${var.volume}
+              volume_catalog: ${var.volume_catalog}
+              volume_schema: ${var.volume_schema}
+              mail_source: ${var.mail_source}
+        # Master templates incl. region_map / region_access (CREATE IF NOT EXISTS; seeds only empty tables), so an
+        # upgraded deployment gets the region tables without re-running setup.
+        - task_key: masters
+          notebook_task:
+            notebook_path: ../src/setup/01_masters.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              master_source: ${var.master_source}
+        - task_key: build_review_queue
+          depends_on:
+            - task_key: export_attachments
+            - task_key: masters
+          notebook_task:
+            notebook_path: ../src/setup/03_build_review_queue.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              master_source: ${var.master_source}
+              lib_path: ${workspace.file_path}/src/lib
+        # One MLflow trace per newly extracted document (+ code checks); stamps trace_id onto the queue.
+        - task_key: log_traces
+          depends_on:
+            - task_key: build_review_queue
+          notebook_task:
+            notebook_path: ../src/quality/05_log_traces.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              experiment: ${var.quality_experiment}
+              warehouse_id: ${var.warehouse_id}
+              serving_endpoint: ${var.serving_endpoint}
+              app_name: ${resources.apps.review_app.name}
+        # Publish to the app: Lakebase upsert (backend=lakebase) + grant the app's service principal access.
+        - task_key: publish_review_queue
+          run_if: ALL_DONE                # publish the queue even if tracing failed
+          depends_on:
+            - task_key: log_traces
+          notebook_task:
+            notebook_path: ../src/setup/04_publish_review_queue.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              backend: ${var.backend}
+              lakebase_project: ${var.lakebase_project}
+              lakebase_branch: ${var.lakebase_branch}
+              lakebase_database: ${var.lakebase_database}
+              lakebase_schema: ${var.lakebase_schema}
+              rls_enforced: ${var.rls_enforced}
+              app_name: ${resources.apps.review_app.name}
+        # LLM judges on the new traces (after publish, so the app has the queue even if scoring is slow).
+        - task_key: score_traces
+          depends_on:
+            - task_key: publish_review_queue
+          notebook_task:
+            notebook_path: ../src/quality/06_score_traces.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
+              experiment: ${var.quality_experiment}
+              warehouse_id: ${var.warehouse_id}
+              judge_endpoint: ${var.judge_endpoint}

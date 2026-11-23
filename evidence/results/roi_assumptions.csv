@@ -1,0 +1,14 @@
+parameter,value,unit,rationale
+manual_min_per_order,3.0,minutes,"Open the email or file, find PO, customer and ship-to, create the order header in the ERP"
+manual_min_per_line,0.75,minutes,"Key one line: look up the material (retailer item, GTIN or name), quantity, UOM, price"
+complexity_mult_1,1.0,x,"Complexity 1 (EDI, portal export): manual effort multiplier"
+complexity_mult_2,1.2,x,"Complexity 2 (Excel, price list, email body)"
+complexity_mult_3,1.5,x,"Complexity 3 (fax, phone, handwritten, amended scans)"
+complexity_mult_4,2.0,x,"Complexity 4 (multi-PO, 90+ lines, phone photos, multimodal)"
+review_min_clean_order,0.5,minutes,Glance and approve an order with no review reasons
+review_min_flagged_order,2.0,minutes,Open a flagged order in the Review App and check the header
+review_min_flagged_line,0.25,minutes,Check one line next to the source document
+rework_min_per_missed_line,0.75,minutes,Key a line the pipeline missed or got wrong (same as manual)
+loaded_cost_per_hour_usd,40.0,USD/hour,Fully loaded cost of a customer-service order-entry rep
+annual_documents,40000.0,documents/year,Inbound order documents a year (about 160 per working day) with the corpus' channel mix
+fte_productive_hours_per_year,1680.0,hours/FTE/year,"Productive hours of one full-time rep (after leave, training, meetings)"

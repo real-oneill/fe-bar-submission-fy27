@@ -1,0 +1,262 @@
+# =====================================================================
+# Order Intake Accelerator — Databricks Asset Bundle
+# AI-powered retailer purchase-order intake: email/doc -> ai_parse_document ->
+# ai_query (registry-governed prompt) -> tribal-knowledge resolution + confidence ->
+# human-in-the-loop Review App -> SAP ORDERS05 writeback.
+# Deploy: `databricks bundle deploy -t fevm -p <profile>`  (see README.md)
+# =====================================================================
+bundle:
+  name: fe-bar-submission-fy27
+
+variables:
+  catalog:
+    description: "Target Unity Catalog (must already exist)"
+    default: main
+  schema:
+    description: "Target schema (created by the bootstrap if missing)"
+    default: order_intake
+  volume:
+    description: "Existing UC Volume that holds inbound documents. MUST already exist — the bundle does NOT create it. Documents are read from its `inbound_docs/` subdirectory."
+    default: landing
+  volume_catalog:
+    description: "Catalog of the Volume (default: the tables' catalog). The Volume may live in another catalog/schema than the tables."
+    default: ${var.catalog}
+  volume_schema:
+    description: "Schema of the Volume (default: the tables' schema)."
+    default: ${var.schema}
+  inbound_via_table:
+    description: "'true' = the Volume is not readable by the pipeline's compute directly (e.g. its storage is not reachable from serverless, only through the Files API): a job task copies new inbound_docs/ files into the Delta table <fetch_table_prefix>inbound_files (src/setup/07_stage_inbound_files.py) and Bronze streams that table instead of Auto Loader. 'false' (default) = Auto Loader on the folder. Changing it needs a full refresh of email_attachments."
+    default: "false"
+  serving_endpoint:
+    description: "Foundation Model endpoint used for extraction (ai_query)."
+    default: databricks-claude-haiku-4-5
+  backend:
+    description: "Review-App storage backend. 'lakebase' for every target (the Lakebase resources are attached per target)."
+    default: lakebase
+  warehouse_id:
+    description: "SQL warehouse id (only used if the app is switched to its warehouse backend)."
+    default: ""
+  lakebase_project:
+    description: "Lakebase (Autoscaling) project id created by the bundle. Must be unique in the workspace."
+    default: order-intake
+  lakebase_branch:
+    description: "Lakebase branch the app uses (the project's default branch is 'production')."
+    default: production
+  lakebase_database:
+    description: "Postgres database holding review_orders / sap_outbound (every project ships 'databricks_postgres')."
+    default: databricks_postgres
+  lakebase_schema:
+    description: "Postgres schema for review_orders / sap_outbound. Use a dedicated one (e.g. order_intake) in a shared, existing project."
+    default: public
+  # --- create a Lakebase project, or use an existing one ---------------------------------------------
+  # Default: the bundle creates (and owns) a project. To use an EXISTING project instead, set in the target:
+  #   lakebase_project: <existing project id>
+  #   lakebase_projects: {}                      # don't create one
+  #   lakebase_branch_path: projects/${var.lakebase_project}/branches/${var.lakebase_branch}
+  # (Complex variables can't be set with --var; use the target or .databricks/bundle/<target>/variable-overrides.json.)
+  lakebase_projects:
+    description: "Lakebase projects the bundle creates. Set to {} to use an existing project (see above)."
+    type: complex
+    default:
+      order_intake:
+        project_id: ${var.lakebase_project}
+        display_name: "Order Intake Review (${bundle.target})"
+        pg_version: 17
+        default_endpoint_settings:
+          autoscaling_limit_min_cu: 0.5     # scales to zero when idle
+          autoscaling_limit_max_cu: 2
+  lakebase_branch_path:
+    description: "Branch the app attaches to. The default points at the bundle-created project (and makes the app wait for it); override when using an existing project."
+    default: projects/${resources.postgres_projects.order_intake.project_id}/branches/${var.lakebase_branch}
+  rls_enforced:
+    description: "'true' = the Review App reads/writes review_orders/sap_outbound AS THE SIGNED-IN USER and Postgres row-level security limits rows to the user's regions (region_access); 'false' = no RLS, the app's service principal sees every row (sandbox/local dev)."
+    default: "false"
+  app_name:
+    description: "Review App name (lowercase letters, numbers, hyphens; unique per workspace). Override when someone else's deployment already uses the default, e.g. --var app_name=order-intake-review-evan."
+    default: order-intake-review
+  quality_experiment:
+    description: "MLflow experiment for extraction traces, LLM-judge scores and human feedback (traces stored in UC <catalog>.<schema>; created if missing)."
+    default: /Users/${workspace.current_user.userName}/order-intake-quality
+  judge_endpoint:
+    description: "Model endpoint for the LLM judges (stronger than the extractor)."
+    default: databricks-claude-sonnet-5
+  reviewers:
+    description: "Comma-separated emails assigned to human review (labeling) sessions."
+    default: ""
+  # --- mail source for Bronze `email_attachments` -----------------------------------------------------
+  mail_source:
+    description: "Where Bronze reads mail from: 'volume' = files in the Volume's inbound_docs/ folder (Auto Loader; demo + file drops), 'outlook' = the Lakeflow Connect Outlook connector's table (outlook_table), filtered to outlook_mailbox, 'both' = the connector mailbox AND the inbound_docs/ files (demo). Switching an existing deployment needs a full refresh of email_attachments (see README)."
+    default: volume
+  outlook_table:
+    description: "mail_source=outlook: the connector's messages table, <catalog>.<schema>.<table> (the deployer needs SELECT on it)."
+    default: ""
+  outlook_mailbox:
+    description: "mail_source=outlook: the mailbox(es) whose messages are read, comma-separated (the connector table can hold others)."
+    default: ""
+  outlook_connection:
+    description: "Bundle-owned Outlook ingestion (target custom_outlook): the Unity Catalog connection of type OUTLOOK (Lakeflow Connect Outlook connector, Beta) the ingestion pipeline reads through. Created by a workspace admin; the deployer needs USE CONNECTION on it."
+    default: ""
+  outlook_mailboxes:
+    description: "Bundle-owned Outlook ingestion: the mailboxes it ingests (a list; must include outlook_mailbox). Set it in .databricks/bundle/<target>/variable-overrides.json: complex variables can't be set with --var."
+    type: complex
+    default: []
+  outlook_start_date:
+    description: "Bundle-owned Outlook ingestion: ingest mail received from this date (YYYY-MM-DD)."
+    default: "2026-01-01"
+  outlook_table_name:
+    description: "Bundle-owned Outlook ingestion: name of the message table it writes in <catalog>.<schema>."
+    default: outlook_oi_messages
+  graph_connection:
+    description: "mail_source=outlook: Unity Catalog HTTP connection to Microsoft Graph (base path /v1.0, same Entra app as the Outlook connector; read-only GETs). Used to fetch attached emails (itemAttachment), which the connector stores without content, and sender display names. Empty = not fetched (attached emails stay out of Bronze); everything else works."
+    default: ""
+  fetch_table_prefix:
+    description: "Prefix for the Graph fetch tables (outlook_item_attachments, outlook_message_senders). Set it when another accelerator in the same schema already uses those names (e.g. another accelerator in the schema)."
+    default: ""
+  bronze_library:
+    description: "INTERNAL — Bronze source file per mail_source (the pipeline includes exactly one). Don't override."
+    type: complex
+    default:
+      volume: 01_bronze.sql
+      both: 01_bronze_outlook.py
+      outlook: 01_bronze_outlook.py
+  # --- master data: demo templates or the real SAP masters ------------------------------------------
+  master_source:
+    description: "Master data the Gold layer resolves customers/materials against: 'demo' = the template tables (customer_master, retailer_sku_map, product_master); 'sap' = the SAP views in sap_catalog (KNA1/ADRC/KNVV/KNVP, MARA/MARM/MAKT/MVKE) via small oi_sap_* working tables refreshed before each pipeline run (src/setup/01b_sap_masters.py)."
+    default: demo
+  sap_catalog:
+    description: "master_source=sap: catalog holding the SAP views (schema db_fnd_proc, v_* views). The deployer needs SELECT on them."
+    default: ""
+  sap_sales_orgs:
+    description: "master_source=sap: comma-separated SAP sales orgs (VKORG) of the affiliate(s) this deployment serves; customers need a KNVV sales view and materials an MVKE listing in one of them. The first listed wins when a customer has several."
+    default: ""
+  material_prefix_len:
+    description: "master_source=sap: an ordered code is valid when its first N characters match a material (SAP resolves the full number)."
+    default: "6"
+  promote_prompt:
+    description: "'true' = point the prompt's @production alias at the version this bundle registers. Default only sets the alias on first install."
+    default: "false"
+  # --- extraction: hybrid (ai_extract precision first, ai_query fallback) or ai_query -----------------------------
+  extraction_mode:
+    description: "'hybrid' = ai_extract v2.1 precision mode on the ai_parse_document layout (PDFs/images/Word) or the text (spreadsheets, csv, emails), with ai_query (the order_extraction prompt) as the fallback for documents ai_extract can't handle (no result, no lines, cut off, codes missing) — per document the result that passes Gold's checks better; 'ai_query' = ai_query for every document (previous behaviour)."
+    default: hybrid
+  promote_extract_schema:
+    description: "'true' = point order_extract_schema@production (the ai_extract schema + instructions) at the version this bundle registers. Default only sets the alias on first install."
+    default: "false"
+  hybrid_max_chars:
+    description: "extraction_mode=hybrid: documents with more parsed characters go straight to ai_query (size guard)."
+    default: "400000"
+  hybrid_max_rows:
+    description: "extraction_mode=hybrid: documents with more spreadsheet / PDF table rows go straight to ai_query (size guard)."
+    default: "3000"
+  hybrid_min_completeness:
+    description: "extraction_mode=hybrid: fall back to ai_query when ai_extract returns fewer than this share of the filled quantity rows Gold counts (and at least 3 rows are missing)."
+    default: "0.8"
+  hybrid_min_code_coverage:
+    description: "extraction_mode=hybrid: fall back to ai_query when fewer than this share of ai_extract's lines have a product code while the document contains codes."
+    default: "0.5"
+  hybrid_min_verified:
+    description: "extraction_mode=hybrid: also run ai_query when fewer than this share of ai_extract's lines pass Gold's code + quantity grounding check (then the better of the two is kept)."
+    default: "0.5"
+
+include:
+  - resources/*.yml
+
+# The built Review App UI (app/frontend/dist, committed) must be uploaded for the app to serve it.
+sync:
+  include:
+    - app/frontend/dist/**
+  exclude:
+    - tests/**
+
+# The Review App runs on Lakebase (Autoscaling Postgres). Each target creates its own Lakebase project and
+# attaches it to the app. (app/server supports a SQL-warehouse backend too, via APP_BACKEND=warehouse, but no
+# target deploys it.)
+# src/lib as a wheel for the pipeline's serverless environment (see pyproject.toml; bump its version on every change).
+artifacts:
+  order_intake_lib:
+    type: whl
+    path: .
+    build: uv build --wheel
+
+targets:
+  # FE Bar FY27 submission: the accelerator on the fictional Maison Solenne corpus (corpus/), in the FE demo
+  # workspace. Host/auth come from the CLI profile (`-p fevm-evan-aws-01`). Documents land in an existing Volume
+  # (`landing`, created by scripts/create_volume.sh) through the `load_corpus` task of the bootstrap.
+  fevm:
+    mode: development
+    default: true
+    variables:
+      catalog: evan_aws_01_catalog
+      schema: fe_bar_fy27
+      volume: landing
+      warehouse_id: "4a29d0ae256f1d92"
+      backend: lakebase
+      mail_source: volume
+      master_source: demo
+      app_name: fe-bar-fy27-review
+      lakebase_project: fe-bar-fy27
+      quality_experiment: /Users/${workspace.current_user.userName}/fe-bar-fy27-quality
+    resources: &lakebase_resources
+      postgres_projects: ${var.lakebase_projects}
+      apps:
+        review_app:
+          resources:
+            # Grants the app's service principal a Postgres role on the branch + connect/create on the database.
+            - name: lakebase
+              postgres:
+                branch: ${var.lakebase_branch_path}
+                database: ${var.lakebase_branch_path}/databases/databricks-postgres
+                permission: CAN_CONNECT_AND_CREATE
+
+  # ---- Any other workspace -------------------------------------------------------------------------------------
+  # Nothing environment-specific: host and login come from the CLI profile, every value from
+  # .databricks/bundle/<target>/variable-overrides.json (start from deploy/variable-overrides.example.json) or --var.
+  # Read docs/PREREQUISITES.md and run `python3 scripts/preflight.py -t custom -p <profile>` before deploying.
+  #   custom          mail from files in <volume>/inbound_docs/ (mail_source volume), or any existing Outlook table
+  #   custom_outlook  mail from the Lakeflow Connect Outlook connector: the bundle also creates the ingestion pipeline
+  custom:
+    mode: development
+    resources: *lakebase_resources
+  custom_outlook:
+    mode: development
+    variables:
+      mail_source: outlook
+      outlook_table: ${var.catalog}.${var.schema}.${var.outlook_table_name}
+    resources:
+      <<: *lakebase_resources
+      pipelines:
+        outlook_ingestion:
+          name: outlook_oi_ingestion
+          catalog: ${var.catalog}
+          schema: ${var.schema}
+          continuous: false
+          ingestion_definition:
+            connection_name: ${var.outlook_connection}
+            source_type: OUTLOOK
+            objects:
+              - table:
+                  source_schema: default
+                  source_table: email_messages
+                  destination_catalog: ${var.catalog}
+                  destination_schema: ${var.schema}
+                  destination_table: ${var.outlook_table_name}
+                  connector_options:
+                    outlook_options:
+                      include_mailboxes: ${var.outlook_mailboxes}
+                      start_date: ${var.outlook_start_date}
+      jobs:
+        # a fresh workspace has no message table yet: ingest before anything reads mail (DAB appends depends_on lists)
+        run_medallion:
+          tasks:
+            - task_key: ingest_outlook
+              pipeline_task:
+                pipeline_id: ${resources.pipelines.outlook_ingestion.id}
+            - task_key: fetch_outlook_items
+              depends_on: [{task_key: ingest_outlook}]
+        bootstrap:
+          tasks:
+            - task_key: ingest_outlook
+              pipeline_task:
+                pipeline_id: ${resources.pipelines.outlook_ingestion.id}
+            - task_key: fetch_outlook_items
+              depends_on: [{task_key: ingest_outlook}]

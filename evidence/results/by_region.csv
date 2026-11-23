@@ -1,0 +1,7 @@
+region,docs,pos,line_accuracy,review_rate,fte_saved,annual_usd_saved
+North America,53,55,0.899,0.527,1.47,98573
+UK & Ireland,40,40,0.649,0.975,1.25,84275
+Middle East,36,70,0.731,0.9,1.67,112471
+DACH,24,24,0.968,0.875,0.42,28428
+Italy,18,18,0.0,1.0,0.37,24783
+France,13,13,1.0,0.154,0.67,44765

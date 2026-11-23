@@ -1,0 +1,28 @@
+{
+  "catalog": "<catalog you can create schemas in>",
+  "schema": "order_intake",
+  "volume": "<existing volume, created by you: CREATE VOLUME catalog.schema.volume>",
+  "volume_catalog": "",
+  "volume_schema": "",
+  "inbound_via_table": "false",
+  "warehouse_id": "<SQL warehouse id>",
+
+  "serving_endpoint": "databricks-claude-haiku-4-5",
+  "judge_endpoint": "databricks-claude-sonnet-5",
+  "extraction_mode": "hybrid",
+
+  "app_name": "order-intake-review",
+  "lakebase_project": "order-intake",
+  "rls_enforced": "false",
+  "reviewers": "reviewer1@yourcompany.com,reviewer2@yourcompany.com",
+
+  "master_source": "demo",
+  "sap_catalog": "",
+  "sap_sales_orgs": "",
+
+  "mail_source": "volume",
+  "outlook_mailbox": "",
+  "outlook_connection": "",
+  "outlook_mailboxes": [],
+  "graph_connection": ""
+}

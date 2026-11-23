@@ -1,0 +1,61 @@
+doc_id,channel,po_number,line_no,raw_item_text,truth_material,qty_as_written,qty_each,material_found,qty_correct,line_correct
+DOC-00001,erp_edi,4572176148,1,VELOUR COSMETICS VELVET MATTE FOUNDATION 30 ML 2N LINEN,MS4010290,12.0,12.0,true,true,true
+DOC-00001,erp_edi,4572176148,2,MISTRAL HAIR SEA SALT TEXTURE SPRAY 150 ML,MS6030079,36.0,36.0,false,false,false
+DOC-00001,erp_edi,4572176148,3,ATELIER NOOR CUIR FUMÉ EXTRAIT DE PARFUM 50 ML,MS3050040,36.0,36.0,false,false,false
+DOC-00001,erp_edi,4572176148,4,SOLENNE PARIS CRÈME LUMIÈRE DAY CREAM 30 ML,MS1010158,1.0,6.0,false,false,false
+DOC-00001,erp_edi,4574104909,1,MISTRAL HAIR SCALP BALANCE SERUM 50 ML,MS6060099,2.0,24.0,true,true,true
+DOC-00001,erp_edi,4574104909,2,VELOUR COSMETICS BROW SCULPT PENCIL SOFT BLACK,MS4030315,36.0,36.0,true,true,true
+DOC-00001,erp_edi,4574104909,3,VELOUR COSMETICS SOFT FOCUS BLUSH ROSEWOOD,MS4020174,24.0,24.0,false,false,false
+DOC-00001,erp_edi,4574104909,4,MISTRAL HAIR COLOUR GUARD SHAMPOO 250 ML,MS6050064,36.0,36.0,true,true,true
+DOC-00001,erp_edi,4574104909,5,THORNFIELD GROOMING CEDAR SHAVE CREAM 150 ML,MS5000191,48.0,48.0,false,false,false
+DOC-00001,erp_edi,4574104909,6,KŌRI BOTANICALS HINOKI CALMING TONER 100 ML,MS2040026,12.0,12.0,true,true,true
+DOC-00001,erp_edi,4574104909,7,LUNE ROUGE LACQUER NAIL COLOUR 110 BALLET,MS7000295,24.0,24.0,true,true,true
+DOC-00001,erp_edi,4574104909,8,MISTRAL HAIR CURL DEFINE CREAM 150 ML,MS6040043,120.0,120.0,false,false,false
+DOC-00001,erp_edi,4574104909,9,EMBER & OAK BLACK TEA ROOM SPRAY 100 ML,MS8030088,4.0,4.0,false,false,false
+DOC-00001,erp_edi,4574104909,10,KŌRI BOTANICALS RICE ENZYME POLISH 100 ML,MS2030164,12.0,12.0,false,false,false
+DOC-00001,erp_edi,4574104909,11,ATELIER NOOR NÉROLI SOLEIL EAU DE TOILETTE 50 ML,MS3030052,6.0,6.0,true,true,true
+DOC-00001,erp_edi,4574104909,12,VELOUR COSMETICS VELVET MATTE FOUNDATION 30 ML 1W IVORY,MS4010167,48.0,48.0,true,true,true
+DOC-00001,erp_edi,4574104909,13,KŌRI BOTANICALS CAMELLIA BARRIER CREAM 100 ML,MS2020129,2.0,12.0,true,true,true
+DOC-00001,erp_edi,4574104909,14,EMBER & OAK WILD MINT CANDLE 400 G,MS8040171,40.0,40.0,true,true,true
+DOC-00001,erp_edi,4574104909,15,MISTRAL HAIR HYDRA REPAIR CONDITIONER 250 ML,MS6010029,24.0,24.0,true,true,true
+DOC-00040,fax,BC-59061,1,Kōri Botanicals Sakura Dew Sleeping Mask 100 ml,MS2050139,6.0,6.0,true,true,true
+DOC-00040,fax,BC-59061,2,Mistral Hair Bond Rebuild Mask 200 ml,MS6020068,48.0,48.0,true,true,true
+DOC-00040,fax,BC-59061,3,Mistral Hair Scalp Balance Serum 50 ml,MS6060099,96.0,96.0,true,true,true
+DOC-00040,fax,BC-59061,4,Solenne Paris Contour des Yeux Eye Cream 15 ml,MS1040049,48.0,48.0,true,true,true
+DOC-00040,fax,BC-59061,5,Solenne Paris Eau Micellaire Cleansing Water 200 ml,MS1030011,24.0,24.0,true,true,true
+DOC-00040,fax,BC-59061,6,Kōri Botanicals Camellia Barrier Cream 100 ml,MS2020129,36.0,36.0,true,true,true
+DOC-00040,fax,BC-59061,7,Kōri Botanicals Sakura Dew Sleeping Mask 50 ml,MS2050041,12.0,12.0,true,true,true
+DOC-00040,fax,BC-59061,8,Solenne Paris Sérum Absolu Regenerating Serum 15 ml,MS1000013,12.0,12.0,true,true,true
+DOC-00040,fax,BC-59061,9,Mistral Hair Sea Salt Texture Spray 150 ml,MS6030079,12.0,12.0,true,true,true
+DOC-00100,email_body,ANT/PO/26/0679,1,Velvet Matte Foundation 30 ml - 4N Honey,MS4010684,72.0,72.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,2,Satin Lip Colour 12 Rouge Velours,MS4000478,144.0,144.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,3,Solenne Paris Crème Lumière Day Cream 30ml,MS1010158,36.0,36.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,4,Velvet Matte Foundation 30 ml - 1W Ivory,MS4010167,24.0,24.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,5,Néroli Soleil EDT - 100ml,MS3030152,24.0,24.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,6,Velvet Matte Foundation 30 ml - 5W Toffee,MS4010990,144.0,144.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,7,Velour Cosmetics Brow Sculpt Pencil Soft Black (EAN 2950455623867),MS4030315,24.0,24.0,true,true,true
+DOC-00100,email_body,ANT/PO/26/0679,8,Soft Focus Blush Apricot,MS4020362,24.0,24.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,9,Iris Poudré EDP - 50ml,MS3060057,48.0,48.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,10,Musc Blanc EDP - 100ml,MS3040237,12.0,12.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,11,Velour Cosmetics Velvet Matte Foundation 30 ml 1N Porcelain,MS4010022,48.0,48.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,12,Solenne Paris Sérum Absolu Regenerating Serum 30ml,MS1000137,12.0,12.0,false,false,false
+DOC-00100,email_body,ANT/PO/26/0679,13,Satin Lip Colour - 18 Berry Noir,MS4000699,144.0,144.0,false,false,false
+DOC-00150,amended_scan,HV-572437,1,Velour Cosmetics Soft Focus Blush Rosewood,MS4020174,10.0,120.0,true,true,true
+DOC-00150,amended_scan,HV-572437,2,Solenne Paris Baume Nuit Night Balm 50 ml,MS1020161,8.0,48.0,true,true,true
+DOC-00150,amended_scan,HV-572437,3,Lune Rouge Glow Highlighter Champagne,MS7030190,12.0,12.0,true,true,true
+DOC-00150,amended_scan,HV-572437,4,Solenne Paris Lotion Essentielle Toner 150 ml,MS1070033,2.0,12.0,true,true,true
+DOC-00150,amended_scan,HV-572437,5,Lune Rouge Lacquer Nail Colour 140 Gunmetal,MS7000824,24.0,24.0,true,true,true
+DOC-00150,amended_scan,HV-572437,6,Solenne Paris Masque Éclat Radiance Mask 75 ml,MS1060170,2.0,12.0,true,true,true
+DOC-00150,amended_scan,HV-572437,7,Solenne Paris Sérum Absolu Regenerating Serum 15 ml,MS1000013,1.0,6.0,true,true,true
+DOC-00150,amended_scan,HV-572437,8,Lune Rouge Glow Highlighter Rose Gold,MS7030219,72.0,72.0,true,true,true
+DOC-00150,amended_scan,HV-572437,9,Velour Cosmetics Satin Lip Colour 18 Berry Noir,MS4000699,120.0,120.0,false,false,false
+DOC-00150,amended_scan,HV-572437,10,Atelier Noor Oud Saffron Eau de Parfum 100 ml,MS3000278,12.0,12.0,false,false,false
+DOC-00150,amended_scan,HV-572437,11,Velour Cosmetics Soft Focus Blush Apricot,MS4020362,24.0,24.0,true,true,true
+DOC-00150,amended_scan,HV-572437,12,Kōri Botanicals Camellia Barrier Cream 50 ml,MS2020048,2.0,12.0,true,true,true
+DOC-00150,amended_scan,HV-572437,13,Kōri Botanicals Rice Enzyme Polish 50 ml,MS2030016,1.0,6.0,true,true,true
+DOC-00150,amended_scan,HV-572437,14,Atelier Noor Vétiver Nocturne Eau de Toilette 50 ml,MS3020038,1.0,6.0,true,true,true
+DOC-00150,amended_scan,HV-572437,15,Lune Rouge Precision Liquid Eyeliner Black,MS7010065,1.0,12.0,true,true,true
+DOC-00150,amended_scan,HV-572437,16,Atelier Noor Rose Ambrée Eau de Parfum 100 ml,MS3010240,4.0,24.0,true,true,true
+DOC-00150,amended_scan,HV-572437,17,Atelier Noor Oud Saffron Eau de Parfum 50 ml,MS3000150,6.0,36.0,true,true,true
+DOC-00150,amended_scan,HV-572437,18,Kōri Botanicals Green Tea Gel Cleanser 200 ml,MS2010137,3.0,18.0,true,true,true
+DOC-00150,amended_scan,HV-572437,19,Velour Cosmetics Satin Lip Colour 08 Terracotta,MS4000380,24.0,24.0,false,false,false
